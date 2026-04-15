@@ -9,7 +9,7 @@ app.use(morgan(':method :url - Status: :status - :response-time ms'));
 const dns = require('node:dns/promises');
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 app.use(cors({
-	origin: ["https://prep-dost.vercel.app/"],
+	origin: ["https://prep-dost.vercel.app", "http://localhost:5173"],
 	credentials: true,
 }));
 app.use(express.json());
