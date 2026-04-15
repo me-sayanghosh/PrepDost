@@ -6,7 +6,12 @@ export function Protected({ children }) {
   const location = useLocation();
 
   if (loading) {
-    return (<main><div>Loading...</div></main>);
+    return (
+      <div className="global-loader-container">
+        <div className="global-spinner"></div>
+        <p className="global-loader-text">Loading...</p>
+      </div>
+    );
   }
 
   if (!user) {
