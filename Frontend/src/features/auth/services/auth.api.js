@@ -2,7 +2,7 @@ import axios from "axios"
 
 
 const api = axios.create({
-    baseURL: 'https://prep-dost.vercel.app',
+    baseURL: 'https://prepdost.onrender.com',
     withCredentials: true
 })
 
