@@ -1,0 +1,219 @@
+// Success Modal Styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+
+  .modal-content {
+    background: linear-gradient(135deg, #f5f0e8 0%, #faf7f2 100%);
+    border-radius: 16px;
+    padding: 60px 50px;
+    text-align: center;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 25px 80px rgba(13, 31, 60, 0.25), 
+                0 0 0 1px rgba(13, 31, 60, 0.08);
+    animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+
+    // Decorative background elements
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #28a745, transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(40, 167, 69, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .modal-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 28px;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      color: white;
+      font-weight: bold;
+      animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+      box-shadow: 0 12px 24px rgba(40, 167, 69, 0.3),
+                  0 0 0 8px rgba(40, 167, 69, 0.1);
+      position: relative;
+      z-index: 2;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+      }
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0d1f3c;
+      margin: 0 0 12px;
+      animation: slideDown 0.5s ease 0.1s both;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    p {
+      color: #6b6157;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0 0 40px;
+      animation: slideDown 0.5s ease 0.2s both;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    .modal-button {
+      padding: 16px 48px;
+      background: linear-gradient(135deg, #0d1f3c 0%, #162d52 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: slideUp 0.5s ease 0.3s both;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(13, 31, 60, 0.2);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, #162d52 0%, #1f3d66 100%);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(13, 31, 60, 0.3);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &:active {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
