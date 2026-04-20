@@ -59,12 +59,10 @@ function Reports() {
 
   return (
     <main className="Home Reports">
-      <button className="global-back-btn" onClick={() => navigate(-1)}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m12 19-7-7 7-7" />
-          <path d="M19 12H5" />
+      <button className="global-back-btn" onClick={() => navigate(-1)} aria-label="Go back" title="Go back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M10.8284 12L15.7782 16.9497L14.364 18.364L7.99998 12L14.364 5.63604L15.7782 7.05025L10.8284 12Z" />
         </svg>
-        <span>Back</span>
       </button>
       <div className="interview-container">
         <header className="home-hero">
