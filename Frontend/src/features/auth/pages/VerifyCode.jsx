@@ -1,48 +1,54 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../auth.form.scss";
-import { forgotPassword } from "../services/auth.api.js";
+import { verifyResetCode } from "../services/auth.api.js";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function ForgotPassword() {
-  const [email, setEmail] = useState("");
+function VerifyCode() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState(location.state?.email || "");
+  const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showRegisterNow, setShowRegisterNow] = useState(false);
-  const navigate = useNavigate();
+
   const normalizedEmail = String(email).trim().toLowerCase();
   const hasEmailInput = normalizedEmail.length > 0;
   const isEmailValid = EMAIL_REGEX.test(normalizedEmail);
 
-  const handleSendCode = async (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setMessage("");
-    setShowRegisterNow(false);
 
-    if (!EMAIL_REGEX.test(String(email).trim().toLowerCase())) {
+    if (!EMAIL_REGEX.test(normalizedEmail)) {
       setErrorMsg("Please enter a valid email address");
       return;
     }
 
-    setLoading(true);
+    if (!String(code).trim()) {
+      setErrorMsg("Please enter verification code");
+      return;
+    }
 
+    setLoading(true);
     try {
-      const data = await forgotPassword(email);
-      setMessage(data.message || "Verification code sent to your registered email.");
+      await verifyResetCode({ email: normalizedEmail, code: String(code).trim() });
+      setMessage("Code verified successfully.");
       setTimeout(() => {
-        navigate("/verify-code", {
-          state: { email: String(email).trim().toLowerCase() },
+        navigate("/reset-password", {
+          state: { email: normalizedEmail, code: String(code).trim() },
           replace: true,
         });
-      }, 600);
+      }, 500);
     } catch (error) {
-      const apiMessage = error.response?.data?.message || "Unable to send verification code";
-      const apiCode = error.response?.data?.code;
-      setErrorMsg(apiMessage);
-      setShowRegisterNow(apiCode === "USER_NOT_FOUND");
+      if (error?.response?.status === 400) {
+        setErrorMsg("Wrong verification code. Enter the right verification code.");
+      } else {
+        setErrorMsg(error.response?.data?.message || "Unable to verify code");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,8 +65,9 @@ function ForgotPassword() {
       </button>
       <main>
         <div className="form-container is-login">
-          <h2>Forgot Password</h2>
+          <h2>Verify Code</h2>
           <div className="divider"></div>
+
           {errorMsg && (
             <div style={{ backgroundColor: '#ffebee', color: '#c62828', padding: '10px 15px', borderRadius: '6px', marginBottom: '16px', fontSize: '0.9rem', border: '1px solid #ffcdd2' }}>
               {errorMsg}
@@ -71,7 +78,8 @@ function ForgotPassword() {
               {message}
             </div>
           )}
-          <form onSubmit={handleSendCode}>
+
+          <form onSubmit={handleVerifyCode}>
             <div className="input-group">
               <label htmlFor="email">Email:</label>
               <input
@@ -88,19 +96,26 @@ function ForgotPassword() {
                 </p>
               )}
             </div>
+
+            <div className="input-group">
+              <label htmlFor="code">Verification Code:</label>
+              <input
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                type="text"
+                id="code"
+                name="code"
+                placeholder="Enter 6-digit code"
+              />
+            </div>
+
             <button className="button primary-button" disabled={loading}>
-              {loading ? "Sending..." : "Send Verification Code"}
+              {loading ? "Verifying..." : "Verify Now"}
             </button>
           </form>
 
-          {showRegisterNow && (
-            <p style={{ marginTop: "12px" }}>
-              No account found for this email. <Link to="/register" className="link">Register now</Link>
-            </p>
-          )}
-
           <p>
-            Remembered it? <Link to="/login" className="link">Back to login</Link>
+            Didn't receive code? <Link to="/forgot-password" className="link">Send again</Link>
           </p>
         </div>
       </main>
@@ -108,4 +123,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default VerifyCode;

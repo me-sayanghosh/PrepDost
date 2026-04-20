@@ -124,14 +124,25 @@ function Reports() {
               </div>
             ) : (
               <div className="reports-grid">
-                {filteredReports.map((report) => (
+                {filteredReports.map((report, index) => (
                   <div
                     key={report._id}
                     className="report-card panel"
+                    style={{ "--card-index": index }}
                     onClick={() => navigate(`/interview/${report._id}`)}
                   >
                     <div className="report-header">
-                      <h3 className="report-title">{report.title || "Interview Strategy"}</h3>
+                      <div className="report-title-wrap">
+                        <span className="report-icon" aria-hidden="true">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 12h6" />
+                            <path d="M9 16h6" />
+                            <path d="M9 8h6" />
+                            <rect x="4" y="3" width="16" height="18" rx="2" ry="2" />
+                          </svg>
+                        </span>
+                        <h3 className="report-title">{report.title || "Interview Strategy"}</h3>
+                      </div>
                       {report.matchScore !== undefined && (
                         <span className={`match-score ${getScoreColorClass(report.matchScore)}`}>
                           {report.matchScore}% Match

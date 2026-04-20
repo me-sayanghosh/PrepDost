@@ -4,6 +4,8 @@ import Landing from "./pages/Landing";
 import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
 import ForgotPassword from "./features/auth/pages/ForgotPassword";
+import VerifyCode from "./features/auth/pages/VerifyCode";
+import ResetPassword from "./features/auth/pages/ResetPassword";
 import { Protected } from "./features/auth/components/protected.jsx";
 import Home from "./features/interview/pages/Home";
 import Interview from "./features/interview/pages/Interview";
@@ -33,6 +35,14 @@ export const router = createBrowserRouter([
     {
         path: "/forgot-password",
         element: <ForgotPassword />,
+    },
+    {
+        path: "/verify-code",
+        element: <VerifyCode />,
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword />,
     },
     {
         path: "/reports",

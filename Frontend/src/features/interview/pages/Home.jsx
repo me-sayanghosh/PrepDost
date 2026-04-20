@@ -13,6 +13,7 @@ function Home() {
   const [resumeFile, setResumeFile] = useState(null);
   const [selfDeclaration, setSelfDeclaration] = useState("");
   const [error, setError] = useState("");
+  const [errorField, setErrorField] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogoutClick = async () => {
@@ -31,6 +32,7 @@ function Home() {
 
     if (file.type !== "application/pdf") {
       setError("Please upload a valid PDF file");
+      setErrorField("resume");
       setResumeFile(null);
       e.target.value = "";
       return;
@@ -39,6 +41,7 @@ function Home() {
     const maxFileSize = 5 * 1024 * 1024;
     if (file.size > maxFileSize) {
       setError("Resume file size should be less than 5MB");
+      setErrorField("resume");
       setResumeFile(null);
       e.target.value = "";
       return;
@@ -47,8 +50,10 @@ function Home() {
     if (file && file.type === "application/pdf") {
       setResumeFile(file);
       setError("");
+      setErrorField("");
     } else {
       setError("Please upload a valid PDF file");
+      setErrorField("resume");
       setResumeFile(null);
     }
   };
@@ -63,22 +68,27 @@ function Home() {
   const clearResumeSelection = () => {
     setResumeFile(null);
     setError("");
+    setErrorField("");
   };
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
     setError("");
+    setErrorField("");
 
     if (!resumeFile) {
       setError("Please upload your resume (PDF)");
+      setErrorField("resume");
       return;
     }
     if (!selfDeclaration.trim()) {
       setError("Please enter your self declaration");
+      setErrorField("selfDeclaration");
       return;
     }
     if (!jobDescription.trim()) {
       setError("Please enter the job description");
+      setErrorField("jobDescription");
       return;
     }
 
@@ -93,6 +103,7 @@ function Home() {
     } catch (err) {
       const errorMsg = err.response?.data?.error || err.message || "Failed to generate report";
       setError(errorMsg);
+      setErrorField("form");
     }
   };
 
@@ -148,145 +159,167 @@ function Home() {
         </div>
       )}
 
-      {error && <div className="alert alert-error">{error}</div>}
-
       <div className="interview-container">
-          <header className="home-hero">
-            <p className="hero-kicker">AI Interview Studio</p>
-            <h1>Build your interview game plan in minutes</h1>
-            <p className="hero-subtitle">
-              Upload your resume, add the target job description, and get tailored
-              interview questions with a focused 7-day strategy.
-            </p>
-            <div className="hero-tags">
-              <span>Personalized Questions</span>
-              <span>Skill Gap Insights</span>
-              <span>Prep Roadmap</span>
+        <header className="home-hero">
+          <p className="hero-kicker">AI Interview Studio</p>
+          <h1>Build your interview game plan in minutes</h1>
+          <p className="hero-subtitle">
+            Upload your resume, add the target job description, and get tailored
+            interview questions with a focused 7-day strategy.
+          </p>
+          <div className="hero-tags">
+            <span>Personalized Questions</span>
+            <span>Skill Gap Insights</span>
+            <span>Prep Roadmap</span>
+          </div>
+        </header>
+
+        <form onSubmit={onSubmitForm} className="interview-form">
+          <div className="left panel">
+            <h2>Interview Prep Assistant</h2>
+            <div className="divider"></div>
+            <div className="input-group">
+              <label htmlFor="job-description">Job Description</label>
+              <textarea
+                id="job-description"
+                placeholder="Paste the job description here..."
+                value={jobDescription}
+                onChange={(e) => {
+                  setJobDescription(e.target.value);
+                  if (errorField === "jobDescription") {
+                    setError("");
+                    setErrorField("");
+                  }
+                }}
+                className="textarea"
+              ></textarea>
+              {error && errorField === "jobDescription" && (
+                <div className="section-error" role="alert">{error}</div>
+              )}
             </div>
-          </header>
+          </div>
 
-          <form onSubmit={onSubmitForm} className="interview-form">
-            <div className="left panel">
-              <h2>Interview Prep Assistant</h2>
-              <div className="divider"></div>
-              <div className="input-group">
-                <label htmlFor="job-description">Job Description</label>
-                <textarea
-                  id="job-description"
-                  placeholder="Paste the job description here..."
-                  value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
-                  className="textarea"
-                ></textarea>
-              </div>
-            </div>
-
-            <div className="right panel">
-              <div className="input-group">
-                <label htmlFor="resume">Upload Resume (PDF)</label>
-                <div className="file-input-wrapper">
-                  <input
-                    ref = {resumeInputRef}
-                    type="file"
-                    id="resume"
-                    name="resume"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="file-input"
-                  />
-                  <div className={`file-dropzone ${resumeFile ? "has-file" : ""}`}>
-                    <label htmlFor="resume" className="file-label">
-                      {resumeFile ? (
-                        <>
-                          <span className="file-icon is-ready" aria-hidden="true">
-                            <span className="icon-core">✓</span>
-                          </span>
-                          <span className="file-text">Resume ready. Click to choose another file.</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="file-icon is-upload" aria-hidden="true">
-                            <span className="icon-core">↑</span>
-                          </span>
-                          <span className="file-text">Click to upload your resume</span>
-                        </>
-                      )}
-                    </label>
-
+          <div className="right panel">
+            <div className="input-group">
+              <label htmlFor="resume">Upload Resume (PDF)</label>
+              <div className="file-input-wrapper">
+                <input
+                  ref={resumeInputRef}
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  className="file-input"
+                />
+                <div className={`file-dropzone ${resumeFile ? "has-file" : ""}`}>
+                  <label htmlFor="resume" className="file-label">
                     {resumeFile ? (
-                      <div className="file-meta">
-                        <div className="file-meta-info">
-                          <p className="file-name">{resumeFile.name}</p>
-                          <span className="file-size">{formatFileSize(resumeFile.size)}</span>
-                        </div>
-                        <button
-                          type="button"
-                          className="remove-file-btn"
-                          onClick={clearResumeSelection}
-                        >
-                          Remove
-                        </button>
-                      </div>
+                      <>
+                        <span className="file-icon is-ready" aria-hidden="true">
+                          <span className="icon-core">✓</span>
+                        </span>
+                        <span className="file-text">Resume ready. Click to choose another file.</span>
+                      </>
                     ) : (
-                      <p className="file-hint">PDF format only • Max size 5MB</p>
+                      <>
+                        <span className="file-icon is-upload" aria-hidden="true">
+                          <span className="icon-core">↑</span>
+                        </span>
+                        <span className="file-text">Click to upload your resume</span>
+                      </>
                     )}
-                  </div>
+                  </label>
+
+                  {resumeFile ? (
+                    <div className="file-meta">
+                      <div className="file-meta-info">
+                        <p className="file-name">{resumeFile.name}</p>
+                        <span className="file-size">{formatFileSize(resumeFile.size)}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="remove-file-btn"
+                        onClick={clearResumeSelection}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="file-hint">PDF format only • Max size 5MB</p>
+                  )}
                 </div>
               </div>
-
-              <div className="input-group">
-                <label htmlFor="self-declaration">Self Declaration</label>
-                <textarea
-                  onChange={(e) => setSelfDeclaration(e.target.value)}
-                  id="self-declaration"
-                  placeholder="Tell us about yourself, your skills, and experience..."
-                  value={selfDeclaration}
-                  
-                  className="textarea"
-                ></textarea>
-              </div>
-
-              <div className="action-buttons-group" style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
-                <button
-                  type="submit"
-                  className="generate-btn"
-                  disabled={loading}
-                  style={{ flex: 1 }}
-                >
-                  {loading ? "Generating Report..." : "Generate Interview Report"}
-                </button>
-
-                <button
-                  type="button"
-                  className="view-reports-btn"
-                  onClick={() => navigate('/reports')}
-                  style={{
-                    flex: 1,
-                    background: 'transparent',
-                    color: '#0d1f3c',
-                    border: '2px solid rgba(13, 31, 60, 0.2)',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = 'rgba(13, 31, 60, 0.05)';
-                    e.currentTarget.style.borderColor = '#0d1f3c';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.borderColor = 'rgba(13, 31, 60, 0.2)';
-                  }}
-                >
-                  View Previous Reports →
-                </button>
-              </div>
+              {error && errorField === "resume" && (
+                <div className="section-error" role="alert">{error}</div>
+              )}
             </div>
-          </form>
-        </div>
+
+            <div className="input-group">
+              <label htmlFor="self-declaration">Self Declaration</label>
+              <textarea
+                onChange={(e) => {
+                  setSelfDeclaration(e.target.value);
+                  if (errorField === "selfDeclaration") {
+                    setError("");
+                    setErrorField("");
+                  }
+                }}
+                id="self-declaration"
+                placeholder="Tell us about yourself, your skills, and experience..."
+                value={selfDeclaration}
+                className="textarea"
+              ></textarea>
+              {error && errorField === "selfDeclaration" && (
+                <div className="section-error" role="alert">{error}</div>
+              )}
+            </div>
+
+            {error && errorField === "form" && (
+              <div className="section-error" role="alert">{error}</div>
+            )}
+
+            <div className="action-buttons-group" style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
+              <button
+                type="submit"
+                className="generate-btn"
+                disabled={loading}
+                style={{ flex: 1 }}
+              >
+                {loading ? "Generating Report..." : "Generate Interview Report"}
+              </button>
+
+              <button
+                type="button"
+                className="view-reports-btn"
+                onClick={() => navigate('/reports')}
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  color: '#0d1f3c',
+                  border: '2px solid rgba(13, 31, 60, 0.2)',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(13, 31, 60, 0.05)';
+                  e.currentTarget.style.borderColor = '#0d1f3c';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(13, 31, 60, 0.2)';
+                }}
+              >
+                View Previous Reports →
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </main>
   );
 }
