@@ -31,7 +31,11 @@ export const useAuth = () => {
             return { success: true };
         } catch (error) {
             console.error("Login failed:", error)
-            return { success: false, error: error.response?.data?.message || "Login failed" };
+            return {
+                success: false,
+                error: error.response?.data?.message || "Login failed",
+                code: error.response?.data?.code,
+            };
         } finally {
             setLoading(false)
         }

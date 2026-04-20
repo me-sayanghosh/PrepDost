@@ -31,6 +31,20 @@ authrouter.post('/login', authcontroller.loginUserController);
 authrouter.get('/logout', authcontroller.logoutUserController);
 
 /* 
+@route POST /api/auth/forgot-password
+@desc send password reset verification code to email
+@access Public
+*/
+authrouter.post('/forgot-password', authcontroller.forgotPasswordController);
+
+/* 
+@route POST /api/auth/reset-password
+@desc reset password with email verification code
+@access Public
+*/
+authrouter.post('/reset-password', authcontroller.resetPasswordController);
+
+/* 
 @route GET /api/auth/get-me
 @desc get the details of the logged in user
 @access Private

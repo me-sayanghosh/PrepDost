@@ -5,6 +5,8 @@ import { useAuth } from "../hooks/useAuth.js";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SuccessModal from "../components/SuccessModal.jsx";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function Login() {
   const { loading, handleLogin, user } = useAuth();
   const [email, setEmail] = useState("");
@@ -12,6 +14,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showRegisterNow, setShowRegisterNow] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { interviewId } = useParams();
@@ -19,13 +22,24 @@ function Login() {
   const redirectTarget = interviewId
     ? `/interview/${interviewId}`
     : location.state?.redirectTo || "/dashboard";
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const hasEmailInput = normalizedEmail.length > 0;
+  const isEmailValid = EMAIL_REGEX.test(normalizedEmail);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
+    setShowRegisterNow(false);
+
+    if (!EMAIL_REGEX.test(String(email).trim().toLowerCase())) {
+      setErrorMsg("Please enter a valid email address");
+      return;
+    }
+
     const result = await handleLogin({ email, password });
     if (result && !result.success) {
       setErrorMsg(result.error);
+      setShowRegisterNow(result.code === "USER_NOT_FOUND");
     }
   };
 
@@ -86,6 +100,11 @@ function Login() {
               {errorMsg}
             </div>
           )}
+          {showRegisterNow && (
+            <p style={{ marginBottom: "16px" }}>
+              No account found for this email. <Link to="/register" className="link">Register now</Link>
+            </p>
+          )}
           <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email:</label>
@@ -96,6 +115,11 @@ function Login() {
               name="email"
               placeholder="Enter Your Email"
             />
+            {hasEmailInput && (
+              <p style={{ color: isEmailValid ? "#28a745" : "#c23a3a", fontSize: "0.85rem", marginTop: "6px" }}>
+                {isEmailValid ? "This email is valid" : "Please enter a valid email address"}
+              </p>
+            )}
           </div>
           <div className="input-group">
             <label htmlFor="password">Password:</label>
@@ -132,6 +156,10 @@ function Login() {
           </div>
           <button className="button primary-button">Login</button>
         </form>
+
+        <p>
+            <Link to="/forgot-password" className="link">Forgot password?</Link>
+        </p>
 
         <p>
             Don't have an account?<Link to="/register" className="link">Register here</Link>

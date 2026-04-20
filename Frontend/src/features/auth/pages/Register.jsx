@@ -5,6 +5,8 @@ import { useAuth } from "../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "../components/SuccessModal.jsx";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -31,6 +33,9 @@ function Register() {
 
   const shouldShowPasswordStatus =
     password.length > 0 && confirmPassword.length > 0;
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const hasEmailInput = normalizedEmail.length > 0;
+  const isEmailValid = EMAIL_REGEX.test(normalizedEmail);
 
   const handleConfirmPasswordChange = (e) => {
     const newConfirmPassword = e.target.value;
@@ -46,6 +51,11 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!EMAIL_REGEX.test(String(email).trim().toLowerCase())) {
+      setErrorMsg("Please enter a valid email address");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setPasswordsMatch(false);
@@ -120,6 +130,11 @@ function Register() {
               name="email"
               placeholder="Enter Your Email"
             />
+            {hasEmailInput && (
+              <p style={{ color: isEmailValid ? "#28a745" : "#c23a3a", fontSize: "0.85rem", marginTop: "6px" }}>
+                {isEmailValid ? "This email is valid" : "Please enter a valid email address"}
+              </p>
+            )}
           </div>
           <div className="input-group">
             <label htmlFor="password">Enter Password:</label>

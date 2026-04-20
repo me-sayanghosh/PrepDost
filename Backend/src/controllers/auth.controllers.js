@@ -1,7 +1,58 @@
 const usermodel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("node:crypto");
+const nodemailer = require("nodemailer");
 const blacklistmodel = require("../models/blacklist.model");
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function isValidEmail(email) {
+  return EMAIL_REGEX.test(normalizeEmail(email));
+}
+
+function getMailTransporter() {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: String(process.env.SMTP_SECURE || "false") === "true",
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
+
+async function sendResetPasswordCodeEmail(user, code) {
+  const transporter = getMailTransporter();
+
+  if (!transporter) {
+    throw new Error("Mail service is not configured");
+  }
+
+  await transporter.sendMail({
+    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    to: user.email,
+    subject: "Your PrepDost password reset code",
+    html: `
+      <p>Hello ${user.username},</p>
+      <p>We received a request to reset your password.</p>
+      <p>Your verification code is:</p>
+      <h2 style="letter-spacing: 4px;">${code}</h2>
+      <p>This code expires in 10 minutes.</p>
+      <p>If you did not request this, you can ignore this email.</p>
+    `,
+  });
+
+}
 
 /* 
 @route POST /api/auth/register
@@ -11,13 +62,18 @@ const blacklistmodel = require("../models/blacklist.model");
 async function registerUserController(req, res) {
   try {
     const { username, email, password } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
 
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
     const isuserexists = await usermodel.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username }, { email: normalizedEmail }],
     });
 
     if (isuserexists) {
@@ -30,7 +86,7 @@ async function registerUserController(req, res) {
 
     const newuser = new usermodel({
       username,
-      email,
+      email: normalizedEmail,
       password: hash,
     });
 
@@ -67,15 +123,23 @@ async function registerUserController(req, res) {
 async function loginUserController(req, res) {
   try {
     const { email, password } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
     
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    const user = await usermodel.findOne({ email });
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
+    const user = await usermodel.findOne({ email: normalizedEmail });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(404).json({
+        message: "No user is available with this email",
+        code: "USER_NOT_FOUND",
+      });
     }
 
     const ispasswordvalid = await bcrypt.compare(password, user.password);
@@ -156,9 +220,106 @@ async function getMeController(req, res) {
   }
 }
 
+/* 
+@route POST /api/auth/forgot-password
+@desc Send a password reset verification code to the user's email
+@access Public
+*/
+async function forgotPasswordController(req, res) {
+  try {
+    const { email } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
+    const user = await usermodel.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "No user is available with this email",
+        code: "USER_NOT_FOUND",
+      });
+    }
+
+    const resetCode = String(Math.floor(100000 + Math.random() * 900000));
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetCode)
+      .digest("hex");
+
+    user.resetPasswordToken = resetPasswordToken;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    await sendResetPasswordCodeEmail(user, resetCode);
+
+    return res.status(200).json({
+      message: "Verification code sent to your registered email.",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    if (error.message === "Mail service is not configured") {
+      return res.status(500).json({ message: "Email service is not configured. Please contact support." });
+    }
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+/* 
+@route POST /api/auth/reset-password
+@desc Reset a user's password using email and verification code
+@access Public
+*/
+async function resetPasswordController(req, res) {
+  try {
+    const { email, code, password } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!email || !code || !password) {
+      return res.status(400).json({ message: "Email, code and password are required" });
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(String(code)).digest("hex");
+
+    const user = await usermodel.findOne({
+      email: normalizedEmail,
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Verification code is invalid or has expired" });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password reset successfully. Please log in with your new password.",
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
      registerUserController,
      loginUserController, 
      logoutUserController, 
-     getMeController 
+     getMeController,
+     forgotPasswordController,
+     resetPasswordController
 };

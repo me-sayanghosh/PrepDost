@@ -1,8 +1,12 @@
 import axios from "axios"
 
+const apiBaseURL =
+    import.meta.env.VITE_API_BASE_URL ||
+    (import.meta.env.DEV ? 'http://localhost:3000' : 'https://prepdost.onrender.com');
+
 
 const api = axios.create({
-    baseURL: 'https://prepdost.onrender.com',
+    baseURL: apiBaseURL,
     withCredentials: true
 })
 
@@ -88,6 +92,26 @@ export async function getMe () {
     }
     catch (error) {
         console.error('Error fetching user details:', error);
+        throw error;
+    }
+}
+
+export async function forgotPassword(email) {
+    try {
+        const response = await api.post('/api/auth/forgot-password', { email });
+        return response.data;
+    } catch (error) {
+        console.error('Error requesting password reset:', error);
+        throw error;
+    }
+}
+
+export async function resetPassword({ email, code, password }) {
+    try {
+        const response = await api.post('/api/auth/reset-password', { email, code, password });
+        return response.data;
+    } catch (error) {
+        console.error('Error resetting password:', error);
         throw error;
     }
 }
