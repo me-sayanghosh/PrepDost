@@ -7,6 +7,21 @@ function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const location = useLocation();
+  const [showLogoutSuccess, setShowLogoutSuccess] = React.useState(false);
+
+  React.useEffect(() => {
+    const shouldShow = sessionStorage.getItem("showLogoutSuccess") === "true";
+    if (shouldShow) {
+      setShowLogoutSuccess(true);
+      sessionStorage.removeItem("showLogoutSuccess");
+
+      const timer = setTimeout(() => {
+        setShowLogoutSuccess(false);
+      }, 2500);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleLoginClick = () => {
     // try to get redirectTo if present
@@ -17,7 +32,14 @@ function Landing() {
   };
 
   return (
-    <div className="landing-page">
+    <>
+      {showLogoutSuccess && (
+        <div className="logout-toast" role="status" aria-live="polite">
+          <span className="toast-icon" aria-hidden="true">✓</span>
+          <span>You are successfully logged out.</span>
+        </div>
+      )}
+      <div className="landing-page">
       <header className="landing-header">
         <div className="logo-container">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="logo-icon">
@@ -122,7 +144,8 @@ function Landing() {
           </div>
         </section>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
 

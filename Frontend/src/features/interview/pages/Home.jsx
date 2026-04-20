@@ -17,8 +17,11 @@ function Home() {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogoutClick = async () => {
-    await handleLogout();
-    navigate("/");
+    const result = await handleLogout();
+    if (result?.success) {
+      sessionStorage.setItem("showLogoutSuccess", "true");
+    }
+    setShowUserMenu(false);
   };
 
   const getInitials = (name) => {

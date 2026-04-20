@@ -24,12 +24,8 @@ function Register() {
   React.useEffect(() => {
     if (user && !loading) {
       setShowSuccess(true);
-      const timer = setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
-      return () => clearTimeout(timer);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading]);
 
   const shouldShowPasswordStatus =
     password.length > 0 && confirmPassword.length > 0;
@@ -86,7 +82,7 @@ function Register() {
       <SuccessModal
         userName={user?.username}
         action="register"
-        onClose={() => setShowSuccess(false)}
+        onClose={() => navigate("/dashboard", { replace: true })}
       />
     );
   }

@@ -19,9 +19,13 @@ function Login() {
   const location = useLocation();
   const { interviewId } = useParams();
 
-  const redirectTarget = interviewId
+  const computedRedirectTarget = interviewId
     ? `/interview/${interviewId}`
     : location.state?.redirectTo || "/dashboard";
+  const redirectTarget =
+    computedRedirectTarget === "/login" || computedRedirectTarget === "/"
+      ? "/dashboard"
+      : computedRedirectTarget;
   const normalizedEmail = String(email).trim().toLowerCase();
   const hasEmailInput = normalizedEmail.length > 0;
   const isEmailValid = EMAIL_REGEX.test(normalizedEmail);
@@ -47,12 +51,8 @@ function Login() {
   React.useEffect(() => {
     if (user && !loading) {
       setShowSuccess(true);
-      const timer = setTimeout(() => {
-        navigate(redirectTarget, { replace: true });
-      }, 2000);
-      return () => clearTimeout(timer);
     }
-  }, [user, loading, navigate, redirectTarget]);
+  }, [user, loading]);
 
   if (loading) {
     return (
@@ -77,7 +77,7 @@ function Login() {
       <SuccessModal
         userName={user?.username}
         action="login"
-        onClose={() => setShowSuccess(false)}
+        onClose={() => navigate(redirectTarget, { replace: true })}
       />
     );
   }

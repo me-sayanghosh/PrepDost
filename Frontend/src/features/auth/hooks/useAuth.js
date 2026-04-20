@@ -65,8 +65,10 @@ export const useAuth = () => {
             // Clear token from localStorage and Authorization header
             setAuthToken(null)
             setUser(null)
+            return { success: true }
         } catch (error) {
             console.error("Logout failed:", error)
+            return { success: false, error: error.response?.data?.message || "Logout failed" }
         } finally {
             setLoading(false)
         }
