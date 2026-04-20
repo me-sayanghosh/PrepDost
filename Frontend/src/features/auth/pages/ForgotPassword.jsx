@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../auth.form.scss";
-import { forgotPassword, resetPassword } from "../services/auth.api.js";
+import { forgotPassword, resetPassword, verifyResetCode } from "../services/auth.api.js";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,6 +14,7 @@ function ForgotPassword() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [codeSent, setCodeSent] = useState(false);
+  const [codeVerified, setCodeVerified] = useState(false);
   const [showRegisterNow, setShowRegisterNow] = useState(false);
   const navigate = useNavigate();
   const normalizedEmail = String(email).trim().toLowerCase();
@@ -37,12 +38,45 @@ function ForgotPassword() {
       const data = await forgotPassword(email);
       setMessage(data.message || "Verification code sent to your registered email.");
       setCodeSent(true);
+      setCodeVerified(false);
+      setCode("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (error) {
       const apiMessage = error.response?.data?.message || "Unable to send verification code";
       const apiCode = error.response?.data?.code;
       setErrorMsg(apiMessage);
       setShowRegisterNow(apiCode === "USER_NOT_FOUND");
       setCodeSent(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setMessage("");
+
+    if (!EMAIL_REGEX.test(String(email).trim().toLowerCase())) {
+      setErrorMsg("Please enter a valid email address");
+      return;
+    }
+
+    if (!String(code).trim()) {
+      setErrorMsg("Please enter verification code");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const data = await verifyResetCode({ email, code });
+      setCodeVerified(true);
+      setMessage(data.message || "Code verified successfully. You can now reset your password.");
+    } catch (error) {
+      setCodeVerified(false);
+      setErrorMsg(error.response?.data?.message || "Unable to verify code");
     } finally {
       setLoading(false);
     }
@@ -128,7 +162,7 @@ function ForgotPassword() {
           )}
 
           {codeSent && (
-            <form onSubmit={handleResetPassword} style={{ marginTop: '18px' }}>
+            <form onSubmit={handleVerifyCode} style={{ marginTop: '18px' }}>
               <div className="input-group">
                 <label htmlFor="code">Verification Code:</label>
                 <input
@@ -140,6 +174,14 @@ function ForgotPassword() {
                   placeholder="Enter 6-digit code"
                 />
               </div>
+              <button className="button primary-button" disabled={loading}>
+                {loading ? "Verifying..." : "Verify Now"}
+              </button>
+            </form>
+          )}
+
+          {codeVerified && (
+            <form onSubmit={handleResetPassword} style={{ marginTop: '18px' }}>
               <div className="input-group">
                 <label htmlFor="password">New Password:</label>
                 <input
@@ -163,7 +205,7 @@ function ForgotPassword() {
                 />
               </div>
               <button className="button primary-button" disabled={loading}>
-                {loading ? "Resetting..." : "Verify Code and Reset Password"}
+                {loading ? "Resetting..." : "Reset Password"}
               </button>
             </form>
           )}

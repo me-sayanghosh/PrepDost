@@ -1,6 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../AuthContext.js";
-import { login, register, logout, getMe, setAuthToken } from "../services/auth.api.js";
+import { login, register, logout, setAuthToken } from "../services/auth.api.js";
 
 
 
@@ -71,23 +71,6 @@ export const useAuth = () => {
             setLoading(false)
         }
     }
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const data = await getMe()
-                setUser(data.user)
-            } catch (error) {
-                console.log("No active session", error.message)
-                setUser(null)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchUser()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return {
         user,

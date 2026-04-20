@@ -16,17 +16,21 @@ function isValidEmail(email) {
 }
 
 function getMailTransporter() {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpHost = String(process.env.SMTP_HOST || "").trim();
+  const smtpUser = String(process.env.SMTP_USER || "").trim();
+  const smtpPass = String(process.env.SMTP_PASS || "").trim();
+
+  if (!smtpHost || !smtpUser || !smtpPass || smtpPass === "your-sendgrid-api-key") {
     return null;
   }
 
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: smtpHost,
     port: Number(process.env.SMTP_PORT || 587),
     secure: String(process.env.SMTP_SECURE || "false") === "true",
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: smtpUser,
+      pass: smtpPass,
     },
   });
 }
@@ -38,7 +42,7 @@ async function sendResetPasswordCodeEmail(user, code) {
     throw new Error("Mail service is not configured");
   }
 
-  await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: process.env.MAIL_FROM || process.env.SMTP_USER,
     to: user.email,
     subject: "Your PrepDost password reset code",
@@ -50,6 +54,14 @@ async function sendResetPasswordCodeEmail(user, code) {
       <p>This code expires in 10 minutes.</p>
       <p>If you did not request this, you can ignore this email.</p>
     `,
+  });
+
+  console.log("Password reset mail queued", {
+    to: user.email,
+    messageId: info.messageId,
+    accepted: info.accepted,
+    rejected: info.rejected,
+    response: info.response,
   });
 
 }
@@ -265,8 +277,22 @@ async function forgotPasswordController(req, res) {
   } catch (error) {
     console.error("Forgot password error:", error);
     if (error.message === "Mail service is not configured") {
-      return res.status(500).json({ message: "Email service is not configured. Please contact support." });
+      return res.status(500).json({ message: "Email service is not configured. Add a valid SMTP_PASS in Backend/.env." });
     }
+
+    const rawError = String(error?.response || error?.message || "");
+    if (rawError.toLowerCase().includes("verified sender identity")) {
+      return res.status(500).json({ message: "MAIL_FROM is not verified in SendGrid. Verify the sender email first." });
+    }
+
+    if (error?.responseCode === 401 || error?.code === "EAUTH") {
+      return res.status(500).json({ message: "SMTP authentication failed. Check SMTP_USER and SMTP_PASS in Backend/.env." });
+    }
+
+    if (error?.responseCode === 403) {
+      return res.status(500).json({ message: "SendGrid denied the request. Check API key permissions and verified sender." });
+    }
+
     res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -315,11 +341,49 @@ async function resetPasswordController(req, res) {
   }
 }
 
+/* 
+@route POST /api/auth/verify-reset-code
+@desc Verify reset code validity before allowing password reset
+@access Public
+*/
+async function verifyResetCodeController(req, res) {
+  try {
+    const { email, code } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!email || !code) {
+      return res.status(400).json({ message: "Email and code are required" });
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address" });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(String(code)).digest("hex");
+
+    const user = await usermodel.findOne({
+      email: normalizedEmail,
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Verification code is invalid or has expired" });
+    }
+
+    return res.status(200).json({ message: "Code verified successfully" });
+  } catch (error) {
+    console.error("Verify reset code error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
      registerUserController,
      loginUserController, 
      logoutUserController, 
      getMeController,
      forgotPasswordController,
-     resetPasswordController
+     resetPasswordController,
+     verifyResetCodeController
 };

@@ -13,7 +13,12 @@ export const AuthProvider = ({children}) => {
         const fetchUser = async () => {
             try {
                 // Load token from localStorage if it exists
-                loadAuthToken();
+                const token = loadAuthToken();
+                if (!token) {
+                    setUser(null)
+                    setLoading(false)
+                    return
+                }
                 
                 const data = await getMe()
                 setUser(data.user)

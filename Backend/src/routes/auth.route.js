@@ -45,6 +45,13 @@ authrouter.post('/forgot-password', authcontroller.forgotPasswordController);
 authrouter.post('/reset-password', authcontroller.resetPasswordController);
 
 /* 
+@route POST /api/auth/verify-reset-code
+@desc verify reset password code before allowing password change
+@access Public
+*/
+authrouter.post('/verify-reset-code', authcontroller.verifyResetCodeController);
+
+/* 
 @route GET /api/auth/get-me
 @desc get the details of the logged in user
 @access Private

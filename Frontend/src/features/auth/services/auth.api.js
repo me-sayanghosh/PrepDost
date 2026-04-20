@@ -91,7 +91,9 @@ export async function getMe () {
         return response.data ;
     }
     catch (error) {
-        console.error('Error fetching user details:', error);
+        if (error?.response?.status !== 401) {
+            console.error('Error fetching user details:', error);
+        }
         throw error;
     }
 }
@@ -102,6 +104,16 @@ export async function forgotPassword(email) {
         return response.data;
     } catch (error) {
         console.error('Error requesting password reset:', error);
+        throw error;
+    }
+}
+
+export async function verifyResetCode({ email, code }) {
+    try {
+        const response = await api.post('/api/auth/verify-reset-code', { email, code });
+        return response.data;
+    } catch (error) {
+        console.error('Error verifying reset code:', error);
         throw error;
     }
 }
