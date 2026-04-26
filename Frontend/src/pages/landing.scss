@@ -75,7 +75,7 @@ $text-muted: #8a7f6e;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 60px;
+  padding: 24px 48px;
   background: transparent;
   width: 100%;
   box-sizing: border-box;
@@ -140,7 +140,7 @@ $text-muted: #8a7f6e;
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 40px 60px;
+  padding: 40px 48px;
 }
 
 .hero-section {
@@ -427,11 +427,11 @@ $text-muted: #8a7f6e;
 // Mobile Responsive Media Queries
 @media (max-width: 1024px) {
   .landing-header {
-    padding: 20px 40px;
+    padding: 20px 28px;
   }
 
   .landing-main {
-    padding: 20px 40px;
+    padding: 20px 28px;
   }
 
   .hero-section {
@@ -669,6 +669,14 @@ $text-muted: #8a7f6e;
 }
 
 @media (max-width: 480px) {
+  .landing-header {
+    padding: 14px 16px;
+  }
+
+  .landing-main {
+    padding: 10px 16px 36px 16px;
+  }
+
   .landing-header {
     .logo-container .logo-text {
       font-size: 1rem;
