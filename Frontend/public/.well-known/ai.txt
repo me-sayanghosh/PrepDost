@@ -1,0 +1,8 @@
+# ai.txt for PrepDost
+
+site: https://prep-dost.vercel.app/
+name: PrepDost
+description: AI interview preparation platform with resume-to-job-description matching and custom 7-day prep plans.
+sitemap: https://prep-dost.vercel.app/sitemap.xml
+llms: https://prep-dost.vercel.app/llms.txt
+robots: https://prep-dost.vercel.app/robots.txt

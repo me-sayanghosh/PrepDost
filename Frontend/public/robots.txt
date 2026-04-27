@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prep-dost.vercel.app/sitemap.xml
+Sitemap: https://prep-dost.vercel.app/sitemap-images.xml
+Host: prep-dost.vercel.app

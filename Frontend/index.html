@@ -2,11 +2,85 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PrepDost</title>
+    <title>PrepDost | AI Interview Preparation Platform</title>
+    <meta
+      name="description"
+      content="PrepDost helps job seekers prepare smarter with resume-to-JD matching, personalized interview questions, and a focused 7-day interview plan."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://prep-dost.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://prep-dost.vercel.app/" />
+    <meta property="og:site_name" content="PrepDost" />
+    <meta property="og:title" content="PrepDost | AI Interview Preparation Platform" />
+    <meta
+      property="og:description"
+      content="Prepare for your next role with personalized technical and behavioral interview practice generated from your resume and job description."
+    />
+    <meta property="og:image" content="https://prep-dost.vercel.app/favicon.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PrepDost | AI Interview Preparation Platform" />
+    <meta
+      name="twitter:description"
+      content="Personalized interview prep with custom questions and a 7-day strategy built from your profile and target job description."
+    />
+    <meta name="twitter:image" content="https://prep-dost.vercel.app/favicon.svg" />
+
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "PrepDost",
+            "url": "https://prep-dost.vercel.app/",
+            "logo": "https://prep-dost.vercel.app/favicon.svg",
+            "sameAs": [
+              "https://github.com/me-sayanghosh/PrepDost"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "name": "PrepDost",
+            "url": "https://prep-dost.vercel.app/",
+            "description": "AI-powered interview preparation platform for resume-to-job-description matching and personalized practice plans.",
+            "publisher": {
+              "@type": "Organization",
+              "name": "PrepDost"
+            }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "PrepDost",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Web",
+            "url": "https://prep-dost.vercel.app/",
+            "description": "Generate tailored technical and behavioral interview questions plus a 7-day prep strategy from your resume and job description."
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
+    <h1 class="sr-only">PrepDost AI Interview Preparation Platform</h1>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

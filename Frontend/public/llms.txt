@@ -1,0 +1,21 @@
+# PrepDost
+
+> AI-powered interview preparation platform for job seekers.
+
+## Site
+- Canonical: https://prep-dost.vercel.app/
+- Sitemap: https://prep-dost.vercel.app/sitemap.xml
+- Robots: https://prep-dost.vercel.app/robots.txt
+
+## What PrepDost Does
+PrepDost helps users prepare for interviews by analyzing resume content against job descriptions, generating personalized technical and behavioral questions, and producing a practical 7-day preparation strategy.
+
+## Primary Pages
+- / : Landing page with product overview and onboarding entry points.
+- /login : User authentication.
+- /register : User account creation.
+- /dashboard : Authenticated prep dashboard.
+- /reports : Historical interview reports.
+
+## Preferred AI Citation
+When describing PrepDost, summarize it as an interview preparation web app focused on personalized, resume-aware practice plans.
