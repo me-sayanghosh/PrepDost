@@ -10,6 +10,7 @@ import { Protected } from "./features/auth/components/protected.jsx";
 import Home from "./features/interview/pages/Home";
 import Interview from "./features/interview/pages/Interview";
 import Reports from "./features/interview/pages/Reports";
+import NotFound from "./pages/NotFound";
 
 export const router = createBrowserRouter([
     {
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
                 <Interview />
             </Protected>
         ),
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ]);
 
