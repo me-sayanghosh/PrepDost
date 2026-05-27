@@ -89,7 +89,7 @@ $text-muted: #8a7f6e;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 48px;
+  padding: 24px 32px;
   background: transparent;
   width: 100%;
   box-sizing: border-box;
@@ -152,9 +152,10 @@ $text-muted: #8a7f6e;
 
 .landing-main {
   width: 100%;
-  max-width: 1300px;
+  /* make container more fluid on very wide screens to reduce side gaps */
+  max-width: min(1400px, 95vw);
   margin: 0 auto;
-  padding: 40px 48px;
+  padding: 40px 32px;
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
