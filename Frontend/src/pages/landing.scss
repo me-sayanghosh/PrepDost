@@ -166,7 +166,7 @@ $text-muted: #8a7f6e;
    ========================================================== */
 .hero-section {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 0.85fr;
   grid-template-areas:
     "text visual"
     "metrics visual"
@@ -193,7 +193,7 @@ $text-muted: #8a7f6e;
     }
 
     .hero-title {
-      font-size: 3.8rem;
+      font-size: 4.1rem;
       font-family: 'Montserrat', 'Poppins', 'DM Sans', sans-serif;
       font-weight: 900;
       line-height: 1.05;
@@ -222,6 +222,14 @@ $text-muted: #8a7f6e;
         &.line-3 {
           transform: rotate(-1.2deg);
           margin-left: 4px;
+
+          .highlight-block {
+            font-size: 1.05em;
+            padding: 8px 24px 10px 24px;
+            background-color: #dc2626;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+          }
         }
       }
 
@@ -431,45 +439,29 @@ $text-muted: #8a7f6e;
           }
         }
       }
-
-      .newspaper-body {
+      .newspaper-wrapper {
         width: 100%;
-        background: linear-gradient(150deg, #f5ebd5 0%, #ede0c4 60%, #e2d2ad 100%); // beautiful tea-stained aged paper color!
-        color: #2c2217; // vintage sepia dark-brown ink!
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.22), 0 3px 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        text-align: left;
         position: relative;
-        overflow: hidden;
         z-index: 10;
         transform: rotate(-3deg) scale(1.02) translateY(5px);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+        // Cast a single, unified, unclipped 3D drop-shadow on the combined shape of the newspaper sheet and rolled corners!
+        filter: drop-shadow(0 15px 35px rgba(44, 34, 23, 0.26)) drop-shadow(0 3px 10px rgba(44, 34, 23, 0.12));
 
-        // Custom clip-path cut-off at BOTH top-right (rolled corner tr) and bottom-left (rolled corner bl)
-        // With organic random jagged tears along ALL four sides!
-        clip-path: polygon(
-          // Top edge with jagged tears
-          0% 5%, 2% 0%, 6% 4%, 10% 0%, 14% 3%, 18% 0%, 22% 4%, 26% 0%, 30% 3%, 
-          34% 0%, 38% 4%, 42% 0%, 46% 3%, 50% 0%, 54% 4%, 58% 0%, 62% 3%, 66% 0%, 
-          70% 4%, 74% 0%, 78% 3%, 82% 0%, 86% 4%, 90% 0%, /* TOP RIGHT fold start */
-          100% 10%, /* TOP RIGHT fold end */
-          
-          // Right edge with jagged tears
-          99% 15%, 100% 20%, 98% 25%, 99% 30%, 97% 35%, 99% 40%, 98% 45%, 100% 50%, 
-          98% 55%, 99% 60%, 97% 65%, 99% 70%, 98% 75%, 100% 80%, 99% 85%, 98% 90%, 99% 95%, 100% 98%,
-          
-          // Bottom edge with jagged tears
-          96% 99%, 92% 100%, 88% 97%, 84% 100%, 80% 98%, 76% 100%, 72% 97%, 68% 100%, 
-          64% 98%, 60% 100%, 56% 97%, 52% 100%, 48% 98%, 44% 100%, 40% 97%, 36% 100%, 
-          32% 98%, 28% 100%, 24% 97%, 20% 100%, 16% 98%, 12% 100%, 10% 100%, /* BOTTOM LEFT fold start */
-          0% 90%, /* BOTTOM LEFT fold end */
-          
-          // Left edge with jagged tears
-          1% 85%, 0% 80%, 2% 75%, 1% 70%, 3% 65%, 1% 60%, 2% 55%, 0% 50%, 
-          2% 45%, 1% 40%, 3% 35%, 1% 30%, 2% 25%, 0% 20%, 2% 15%, 1% 10%, 0% 6%
-        );
+        &:hover {
+          transform: rotate(-1.5deg) scale(1.04) translateY(0);
+          filter: drop-shadow(0 22px 50px rgba(44, 34, 23, 0.36)) drop-shadow(0 5px 15px rgba(44, 34, 23, 0.15));
+
+          .rolled-corner-tr {
+            transform: scale(1.08) translate(-1px, 1px);
+            box-shadow: -6px 6px 16px rgba(0, 0, 0, 0.38);
+          }
+
+          .rolled-corner-bl {
+            transform: scale(1.08) translate(1px, -1px);
+            box-shadow: 6px -6px 16px rgba(0, 0, 0, 0.38);
+          }
+        }
 
         .rolled-corner-tr {
           position: absolute;
@@ -505,20 +497,43 @@ $text-muted: #8a7f6e;
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
         }
 
-        &:hover {
-          transform: rotate(-1.5deg) scale(1.04) translateY(0);
-          box-shadow: 0 22px 50px rgba(0, 0, 0, 0.32);
+        .newspaper-body {
+          width: 100%;
+          background: radial-gradient(circle at 50% 50%, rgba(246, 238, 221, 0.97), rgba(228, 212, 180, 0.99)), 
+                      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+          color: #2c2217; // vintage sepia dark-brown ink!
+          box-shadow: inset 0 0 30px rgba(50, 40, 25, 0.22); // realistic aged vignette edge inside clip-path!
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          text-align: left;
+          position: relative;
+          overflow: hidden;
+          z-index: 10;
 
-          .rolled-corner-tr {
-            transform: scale(1.08) translate(-1px, 1px);
-            box-shadow: -6px 6px 16px rgba(0, 0, 0, 0.38);
-          }
-
-          .rolled-corner-bl {
-            transform: scale(1.08) translate(1px, -1px);
-            box-shadow: 6px -6px 16px rgba(0, 0, 0, 0.38);
-          }
-        }
+          // Custom clip-path cut-off at BOTH top-right (rolled corner tr) and bottom-left (rolled corner bl)
+          // With organic random jagged tears along ALL four sides!
+          clip-path: polygon(
+            // Top edge with jagged tears
+            0% 5%, 2% 0%, 6% 4%, 10% 0%, 14% 3%, 18% 0%, 22% 4%, 26% 0%, 30% 3%, 
+            34% 0%, 38% 4%, 42% 0%, 46% 3%, 50% 0%, 54% 4%, 58% 0%, 62% 3%, 66% 0%, 
+            70% 4%, 74% 0%, 78% 3%, 82% 0%, 86% 4%, 90% 0%, /* TOP RIGHT fold start */
+            100% 10%, /* TOP RIGHT fold end */
+            
+            // Right edge with jagged tears
+            99% 15%, 100% 20%, 98% 25%, 99% 30%, 97% 35%, 99% 40%, 98% 45%, 100% 50%, 
+            98% 55%, 99% 60%, 97% 65%, 99% 70%, 98% 75%, 100% 80%, 99% 85%, 98% 90%, 99% 95%, 100% 98%,
+            
+            // Bottom edge with jagged tears
+            96% 99%, 92% 100%, 88% 97%, 84% 100%, 80% 98%, 76% 100%, 72% 97%, 68% 100%, 
+            64% 98%, 60% 100%, 56% 97%, 52% 100%, 48% 98%, 44% 100%, 40% 97%, 36% 100%, 
+            32% 98%, 28% 100%, 24% 97%, 20% 100%, 16% 98%, 12% 100%, 10% 100%, /* BOTTOM LEFT fold start */
+            0% 90%, /* BOTTOM LEFT fold end */
+            
+            // Left edge with jagged tears
+            1% 85%, 0% 80%, 2% 75%, 1% 70%, 3% 65%, 1% 60%, 2% 55%, 0% 50%, 
+            2% 45%, 1% 40%, 3% 35%, 1% 30%, 2% 25%, 0% 20%, 2% 15%, 1% 10%, 0% 6%
+          );
 
         /* Realistic Vintage Coffee Stain */
         .coffee-stain {
@@ -726,8 +741,8 @@ $text-muted: #8a7f6e;
         
         .news-sketch-container {
           position: relative;
-          background: #eae6db;
-          border: 1.5px solid #111111;
+          background: rgba(44, 34, 23, 0.04);
+          border: 1.5px solid #2c2217;
           padding: 8px 12px;
           width: 100%;
           display: flex;
@@ -735,7 +750,7 @@ $text-muted: #8a7f6e;
           align-items: center;
           justify-content: center;
           gap: 6px;
-          box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 0 15px rgba(44, 34, 23, 0.05);
 
           .woodcut-svg {
             width: 100%;
@@ -745,7 +760,7 @@ $text-muted: #8a7f6e;
             margin: 6px 0;
             
             line, path, rect {
-              stroke: #111111 !important;
+              stroke: #2c2217 !important;
             }
           }
           
@@ -753,10 +768,10 @@ $text-muted: #8a7f6e;
             font-family: 'DM Sans', sans-serif;
             font-size: 0.52rem;
             font-weight: 700;
-            color: #333333;
+            color: #2c2217;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            border-top: 1px solid rgba(0, 0, 0, 0.15);
+            border-top: 1px solid rgba(44, 34, 23, 0.15);
             padding-top: 4px;
             width: 100%;
             text-align: center;
@@ -764,8 +779,8 @@ $text-muted: #8a7f6e;
         }
 
         .classified-section {
-          background: #f0ede4;
-          border: 1px solid #111111;
+          background: rgba(44, 34, 23, 0.03);
+          border: 1.5px solid #2c2217;
           padding: 8px 12px;
           display: flex;
           flex-direction: column;
@@ -775,8 +790,8 @@ $text-muted: #8a7f6e;
             font-family: 'DM Sans', sans-serif;
             font-size: 0.65rem;
             font-weight: 800;
-            color: white;
-            background: #111111;
+            color: #fcfbf9;
+            background: #2c2217;
             padding: 2px 6px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -805,6 +820,7 @@ $text-muted: #8a7f6e;
       }
     }
   }
+}
 
 /* ==========================================================
    DYNAMIC SELECTION TAGLINE SECTION
@@ -1636,9 +1652,45 @@ $text-muted: #8a7f6e;
   }
 }
 
-/* ==========================================================
-   MOBILE & TABLET RESPONSIVENESS OVERRIDES (AT ROOT)
-   ========================================================== */
+/* Laptop & Small Desktop Breakpoint */
+@media (max-width: 1280px) {
+  .hero-section {
+    gap: 20px 30px;
+    
+    .hero-text-block {
+      .hero-title {
+        font-size: 3.3rem;
+        
+        .title-line.line-3 {
+          .highlight-block {
+            font-size: 1.02em;
+            padding: 6px 18px 8px 18px;
+          }
+        }
+      }
+    }
+
+    .hero-visual {
+      .newspaper-desk {
+        max-width: 440px;
+        min-height: 440px;
+        
+        .newspaper-scrap {
+          &.scrap-top {
+            width: 150px;
+            height: 120px;
+            right: -10px;
+          }
+          &.scrap-bottom {
+            width: 170px;
+            height: 130px;
+            left: -20px;
+          }
+        }
+      }
+    }
+  }
+}
 
 /* Tablet & Smaller Desktop Breakpoint */
 @media (max-width: 1024px) {
@@ -1669,7 +1721,7 @@ $text-muted: #8a7f6e;
       }
 
       .hero-title {
-        font-size: 2.8rem;
+        font-size: 3.1rem;
         align-items: center;
         
         .title-line {
@@ -1898,8 +1950,6 @@ $text-muted: #8a7f6e;
 
       .blob {
         display: none;
-      }
-
       .newspaper-desk {
         position: relative;
         left: 0;
@@ -1917,23 +1967,28 @@ $text-muted: #8a7f6e;
         .newspaper-scrap {
           display: none !important; // hide background scraps on mobile to save screen space
         }
-      }  .newspaper-body {
-          padding: 16px 14px 24px 14px;
-          gap: 12px;
-          transform: rotate(-2deg) scale(0.98) !important; // maintain gorgeous organic angle on mobile!
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important; // realistic shadow casts directly on the page!
+
+        .newspaper-wrapper {
+          transform: rotate(-2deg) scale(0.98) !important;
+          filter: drop-shadow(0 12px 30px rgba(44, 34, 23, 0.22)) !important;
+          box-shadow: none !important;
 
           .rolled-corner-tr {
-            width: 35px;
-            height: 35px;
+            width: 35px !important;
+            height: 35px !important;
           }
 
           .rolled-corner-bl {
-            width: 35px;
-            height: 35px;
+            width: 35px !important;
+            height: 35px !important;
           }
 
-          .coffee-stain {
+          .newspaper-body {
+            padding: 16px 14px 24px 14px;
+            gap: 12px;
+            box-shadow: inset 0 0 15px rgba(50, 40, 25, 0.15) !important; // subtle mobile inner vignette
+
+            .coffee-stain {
             width: 60px;
             height: 60px;
             top: 10px;
@@ -2007,6 +2062,9 @@ $text-muted: #8a7f6e;
         }
       }
     }
+  }
+}
+}
 
   .tagline-section {
     padding: 80px 20px;
