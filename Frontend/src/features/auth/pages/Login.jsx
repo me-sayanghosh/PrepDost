@@ -56,7 +56,7 @@ function Login() {
 
   if (loading) {
     return (
-      <main className="loading-page">
+      <main className="auth-page-main loading-page">
         <div className="spinner-container">
           <div className="spinner"></div>
           <p className="loading-text">Logging in...</p>
@@ -89,7 +89,7 @@ function Login() {
           <path d="M10.8284 12L15.7782 16.9497L14.364 18.364L7.99998 12L14.364 5.63604L15.7782 7.05025L10.8284 12Z" />
         </svg>
       </button>
-      <main>
+      <main className="auth-page-main">
         <div className="form-container is-login">
           <h2>Login</h2>
           <div className="divider"></div>

@@ -1,13 +1,9 @@
-main {
+main.auth-page-main {
     min-height: 100vh;
     width:100%;
-
-
-
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 * {
@@ -26,7 +22,7 @@ main {
   --text-placeholder: #bdb5a8;
 }
 
-main {
+main.auth-page-main {
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -347,7 +343,7 @@ main {
 }
 
 // Loading Page Styles
-main.loading-page {
+main.auth-page-main.loading-page {
   background: linear-gradient(135deg, #f5f0e8 0%, #faf7f2 100%);
 
   .spinner-container {
@@ -392,7 +388,7 @@ main.loading-page {
 }
 
 @media (max-width: 480px) {
-  main {
+  main.auth-page-main {
     padding: 20px;
   }
   
