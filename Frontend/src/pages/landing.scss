@@ -240,35 +240,78 @@ $text-muted: #8a7f6e;
         align-items: center;
         white-space: nowrap;
         transform-origin: left center;
-        
+
         &.line-1 {
           transform: rotate(-1.5deg);
         }
+
         &.line-2 {
           transform: rotate(-0.8deg);
           margin-left: 8px;
         }
+
         &.line-3 {
           transform: rotate(-1.2deg);
           margin-left: 4px;
 
           .highlight-block {
+            --highlight-bg: #dc2626;
+            --highlight-shadow: rgba(220, 38, 38, 0.35);
             font-size: 1.05em;
             padding: 8px 24px 10px 24px;
-            background-color: #dc2626;
-            color: #ffffff;
-            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+            color: #111111;
           }
         }
       }
 
       .highlight-block {
-        background-color: #a79eff;
+        --highlight-bg: #a79eff;
+        --highlight-shadow: rgba(167, 158, 255, 0.25);
+        background-color: transparent;
         color: #000000;
         padding: 4px 18px 8px 18px;
         border-radius: 2px;
-        box-shadow: 0 4px 12px rgba(#a79eff, 0.25);
         display: inline-block;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .highlight-block::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--highlight-bg);
+        transform: scaleX(0);
+        transform-origin: left center;
+        z-index: -1;
+      }
+
+      &.is-animated .title-line .highlight-block::before {
+        animation: highlightReveal 720ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+      }
+
+      &.is-animated .title-line.line-1 .highlight-block::before {
+        animation-delay: 0s;
+      }
+
+      &.is-animated .title-line.line-2 .highlight-block::before {
+        animation-delay: 0.12s;
+      }
+
+      &.is-animated .title-line.line-3 .highlight-block::before {
+        animation-delay: 0.24s;
+        animation-duration: 840ms;
+      }
+
+      &.is-animated .title-line .highlight-block::before {
+        box-shadow: 0 4px 12px var(--highlight-shadow);
+      }
+
+      &.is-animated .title-line.line-3 .highlight-block {
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
       }
 
       .no-highlight {
@@ -3118,5 +3161,31 @@ $text-muted: #8a7f6e;
         justify-content: center;
       }
     }
+  }
+}
+
+/* Highlight reveal animation: start hidden, then fully reveal the existing highlight colors */
+@keyframes highlightReveal {
+  0% {
+    transform: scaleX(0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  70% {
+    transform: scaleX(1.03);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    transform: scaleX(1);
+    box-shadow: 0 4px 12px var(--highlight-shadow);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title .title-line .highlight-block::before {
+    animation: none !important;
+    transform: scaleX(1) !important;
+    box-shadow: 0 4px 12px var(--highlight-shadow) !important;
   }
 }

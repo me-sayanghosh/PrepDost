@@ -9,6 +9,7 @@ function Landing() {
   const location = useLocation();
   const [showLogoutSuccess, setShowLogoutSuccess] = React.useState(false);
   const [showCopyToast, setShowCopyToast] = React.useState(false);
+  const [titleAnimated, setTitleAnimated] = React.useState(false);
   
   // State for Interactive Sandbox
   const [activeCategory, setActiveCategory] = React.useState("React Native");
@@ -29,6 +30,12 @@ function Landing() {
 
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  // trigger hero title highlight animation shortly after mount
+  React.useEffect(() => {
+    const t = setTimeout(() => setTitleAnimated(true), 180);
+    return () => clearTimeout(t);
   }, []);
 
   const handleLoginClick = () => {
@@ -158,7 +165,7 @@ function Landing() {
           <section className="hero-section">
             <div className="hero-text-block">
               <div className="pill-badge"><span className="badge-pulse-dot" aria-hidden="true"></span>Built for Job Seekers</div>
-              <h1 className="hero-title highlight-title">
+              <h1 className={`hero-title highlight-title ${titleAnimated ? 'is-animated' : ''}`}>
                 <span className="title-line line-1">
                   <span className="highlight-block">Ace Your Next</span>
                 </span>
