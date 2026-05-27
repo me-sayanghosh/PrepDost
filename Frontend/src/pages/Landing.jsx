@@ -154,7 +154,7 @@ function Landing() {
           {/* HERO SECTION */}
           <section className="hero-section">
             <div className="hero-text-block">
-              <div className="pill-badge">Built for Job Seekers</div>
+              <div className="pill-badge"><span className="badge-pulse-dot" aria-hidden="true"></span>Built for Job Seekers</div>
               <h1 className="hero-title highlight-title">
                 <span className="title-line line-1">
                   <span className="highlight-block">Ace Your Next</span>
@@ -388,6 +388,9 @@ function Landing() {
                 </div>
                 <h3>Share Profile</h3>
                 <p>Upload your resume. We automatically parse your projects, technical skills, and experience details.</p>
+                <span className="step-arrow" aria-hidden="true">
+                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M1 7h18M13 1l6 6-6 6" stroke="#0d1f3c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
               </div>
 
               <div className="step-card">
@@ -397,6 +400,9 @@ function Landing() {
                 </div>
                 <h3>Set Job Goal</h3>
                 <p>Paste the Job Description for your target role. We evaluate exactly what recruiters are looking for.</p>
+                <span className="step-arrow" aria-hidden="true">
+                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M1 7h18M13 1l6 6-6 6" stroke="#0d1f3c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
               </div>
 
               <div className="step-card">
@@ -415,9 +421,9 @@ function Landing() {
             <div className="sandbox-grid">
               <div className="sandbox-text">
                 <span className="section-pill">Interactive Demo</span>
-                <h2 className="section-title">Test Drive the Experience</h2>
+                <h2 className="section-title">Try a Live Question Preview</h2>
                 <p className="section-subtitle">
-                  We generate custom-tailored prep questions that prepare you for exactly what your interviewers will ask. Tap different categories below to preview generated material.
+                  We generate hyper-tailored prep questions that match exactly what your interviewers will ask. Switch categories to preview real outputs.
                 </p>
                 <div className="category-tabs">
                   {Object.keys(sandboxQuestions).map((cat) => (
@@ -442,7 +448,7 @@ function Landing() {
                     <span className="mock-badge outline-badge">{activeCategory}</span>
                   </div>
                   <div className="card-content">
-                    <span className="q-label">SAMPLE INTERVIEW PROMPT</span>
+                    <span className="q-label">Sample Interview Prompt</span>
                     <h3 className="q-title">{currentSandbox.title}</h3>
                     <p className="q-desc">{currentSandbox.question}</p>
                     
@@ -459,7 +465,7 @@ function Landing() {
                         <ul className="tips-list">
                           {currentSandbox.tips.map((tip, idx) => (
                             <li key={idx} className="tip-item">
-                              <span className="bullet">✦</span>
+                              <span className="bullet">{idx + 1}</span>
                               <span className="tip-text">{tip}</span>
                             </li>
                           ))}
@@ -481,36 +487,47 @@ function Landing() {
             </div>
 
             <div className="features-grid">
+              {/* Hero card – left column, spans 2 rows */}
               <div className="feature-card">
                 <div className="feature-icon bg-light-blue">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
                 </div>
                 <h3>Deep Match Engine</h3>
-                <p>Identifies crucial conceptual misalignments by cross-referencing your resume lines directly with core JD requirements.</p>
+                <p>Identifies crucial conceptual misalignments by cross-referencing your resume lines directly with core JD requirements — so nothing falls through the cracks.</p>
+                <span className="feature-tag">✦ AI-Powered Matching</span>
               </div>
 
+              {/* Compact card 2 */}
               <div className="feature-card">
                 <div className="feature-icon bg-light-purple">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                 </div>
-                <h3>Custom Behavioral Prompts</h3>
-                <p>Presents highly contextual behavioral prompts based on your parsed projects, guiding you to highlight real impact.</p>
+                <div className="feature-text">
+                  <h3>Custom Behavioral Prompts</h3>
+                  <p>Highly contextual behavioral questions based on your parsed projects, guiding you to highlight real impact.</p>
+                </div>
               </div>
 
+              {/* Compact card 3 */}
               <div className="feature-card">
                 <div className="feature-icon bg-light-red">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 </div>
-                <h3>Structured 7-Day Strategy</h3>
-                <p>Builds a bite-sized dashboard agenda calendar that maps out preparation steps so you avoid last-minute stress.</p>
+                <div className="feature-text">
+                  <h3>Structured 7-Day Strategy</h3>
+                  <p>A bite-sized preparation calendar that maps out daily study steps so you avoid last-minute panic.</p>
+                </div>
               </div>
 
+              {/* Full-width card 4 */}
               <div className="feature-card">
                 <div className="feature-icon bg-light-green">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                 </div>
-                <h3>AI Keyword Targets</h3>
-                <p>Suggests critical terminology and technical benchmarks to mention so your answers satisfy scanning systems and technical leads.</p>
+                <div className="feature-text">
+                  <h3>AI Keyword Targets</h3>
+                  <p>Suggests critical terminology and technical benchmarks to mention so your answers satisfy both ATS scanning systems and human technical leads.</p>
+                </div>
               </div>
             </div>
           </section>
@@ -547,49 +564,62 @@ function Landing() {
 
         {/* PREMIUM FOOTER */}
         <footer className="landing-footer">
-          <div className="footer-content">
-            <div className="footer-info">
-              <div className="logo-container">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="logo-icon">
-                  <path d="M10 21V15c-3 0-6-2-6-5a7 7 0 0 1 14 0v2h-1.5v3H14v6Z" />
-                  <path d="M11 16V6" />
-                  <path d="M8 9l3-3 3 3" />
-                </svg>
-                <span className="logo-text">PrepDost</span>
+          <div className="footer-inner">
+            <div className="footer-content">
+              <div className="footer-info">
+                <div className="logo-container">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="logo-icon">
+                    <path d="M10 21V15c-3 0-6-2-6-5a7 7 0 0 1 14 0v2h-1.5v3H14v6Z" />
+                    <path d="M11 16V6" />
+                    <path d="M8 9l3-3 3 3" />
+                  </svg>
+                  <span className="logo-text">PrepDost</span>
+                </div>
+                <p className="footer-desc">
+                  Hyper-tailored interview blueprints generated in seconds to help job seekers land roles at global technology platforms.
+                </p>
+                <div className="footer-socials">
+                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub">GH</a>
+                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter">TW</a>
+                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn">LI</a>
+                </div>
               </div>
-              <p className="footer-desc">
-                Hyper-tailored interview blueprints generated in seconds to help job seekers land roles at global technology platforms.
-              </p>
+
+              <div className="footer-links-grid">
+                <div className="links-col">
+                  <h4>Product</h4>
+                  <a href="#how">How it Works</a>
+                  <a href="#sandbox">Demo Sandbox</a>
+                  <a href="#features">Features</a>
+                </div>
+                <div className="links-col">
+                  <h4>Resources</h4>
+                  <a href="#faq">FAQ</a>
+                  <a href="#guides">Prep Guides</a>
+                  <a href="#api">API Access</a>
+                </div>
+                <div className="links-col">
+                  <h4>Company</h4>
+                  <a href="#about">About Us</a>
+                  <a href="#careers">Careers</a>
+                  <a href="#privacy">Privacy Policy</a>
+                </div>
+              </div>
             </div>
 
-            <div className="footer-links-grid">
-              <div className="links-col">
-                <h4>Product</h4>
-                <a href="#how">How it Works</a>
-                <a href="#sandbox">Demo Sandbox</a>
-                <a href="#features">Features</a>
-              </div>
-              <div className="links-col">
-                <h4>Resources</h4>
-                <a href="#faq">FAQ</a>
-                <a href="#guides">Prep Guides</a>
-                <a href="#api">API Access</a>
-              </div>
-              <div className="links-col">
-                <h4>Company</h4>
-                <a href="#about">About Us</a>
-                <a href="#careers">Careers</a>
-                <a href="#privacy">Privacy Policy</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="footer-bottom">
-            <p>&copy; {new Date().getFullYear()} PrepDost. All rights reserved.</p>
-            <div className="socials">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <div className="footer-bottom">
+              <p>&copy; {new Date().getFullYear()} PrepDost. All rights reserved.</p>
+              {false && <div className="footer-bottom-links">
+                <a href="#privacy">Privacy</a>
+                <span>·</span>
+                <a href="#terms">Terms</a>
+                <span>·</span>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span>·</span>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <span>·</span>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              </div>}
             </div>
           </div>
         </footer>
