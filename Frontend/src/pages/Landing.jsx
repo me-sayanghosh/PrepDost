@@ -118,7 +118,10 @@ function Landing() {
       {showCopyToast && (
         <div className="copy-toast" role="status" aria-live="polite">
           <span className="toast-icon" aria-hidden="true">✓</span>
-          <span>Tagline copied to clipboard!</span>
+          <div className="toast-content">
+            <span className="toast-title">Copied to Clipboard</span>
+            <span className="toast-message">Your PrepDost tagline is ready to paste.</span>
+          </div>
         </div>
       )}
 
@@ -579,30 +582,21 @@ function Landing() {
                   Hyper-tailored interview blueprints generated in seconds to help job seekers land roles at global technology platforms.
                 </p>
                 <div className="footer-socials">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub">GH</a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter">TW</a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn">LI</a>
-                </div>
-              </div>
-
-              <div className="footer-links-grid">
-                <div className="links-col">
-                  <h4>Product</h4>
-                  <a href="#how">How it Works</a>
-                  <a href="#sandbox">Demo Sandbox</a>
-                  <a href="#features">Features</a>
-                </div>
-                <div className="links-col">
-                  <h4>Resources</h4>
-                  <a href="#faq">FAQ</a>
-                  <a href="#guides">Prep Guides</a>
-                  <a href="#api">API Access</a>
-                </div>
-                <div className="links-col">
-                  <h4>Company</h4>
-                  <a href="#about">About Us</a>
-                  <a href="#careers">Careers</a>
-                  <a href="#privacy">Privacy Policy</a>
+                  <a href="https://github.com/me-sayanghosh" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub profile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 1.5A10.5 10.5 0 0 0 8.678 21.96c.526.097.72-.229.72-.507v-1.97c-2.93.636-3.548-1.244-3.548-1.244-.48-1.218-1.172-1.542-1.172-1.542-.96-.656.073-.642.073-.642 1.061.075 1.619 1.09 1.619 1.09.944 1.617 2.477 1.15 3.08.88.095-.684.37-1.15.673-1.414-2.339-.266-4.798-1.17-4.798-5.21 0-1.15.41-2.09 1.084-2.828-.11-.266-.47-1.336.102-2.784 0 0 .884-.283 2.897 1.08a10.06 10.06 0 0 1 5.274 0c2.012-1.363 2.895-1.08 2.895-1.08.574 1.448.213 2.518.104 2.784.675.738 1.083 1.678 1.083 2.828 0 4.05-2.464 4.94-4.81 5.2.38.327.72.972.72 1.96v2.905c0 .281.19.61.726.507A10.5 10.5 0 0 0 12 1.5Z" />
+                    </svg>
+                  </a>
+                  <a href="https://x.com/SayanDev01" target="_blank" rel="noopener noreferrer" title="X" aria-label="X profile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M18.901 2H22l-6.768 7.735L23.194 22h-6.233l-4.882-7.07L5.894 22H2.792l7.24-8.277L.5 2h6.39l4.414 6.39L18.9 2Zm-1.092 18.027h1.724L5.958 3.868H4.108l13.7 16.159Z" />
+                    </svg>
+                  </a>
+                  <a href="https://www.linkedin.com/in/sayan-ghosh-b7aaa5293/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn profile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5ZM3 9h4v12H3V9Zm7 0h3.83v1.64h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.09V21h-4v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95V21h-4V9Z" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
