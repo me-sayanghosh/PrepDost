@@ -201,39 +201,134 @@ function Landing() {
             </div>
 
             <div className="hero-visual">
-              <div className="visual-card">
-                <div className="card-header">
-                  <div className="dots">
-                    <span></span><span></span><span></span>
-                  </div>
-                  <div className="mock-url">studio.ai/generate</div>
-                </div>
-                <div className="card-body">
-                  <div className="mock-skeleton header-skeleton"></div>
-                  <div className="mock-skeleton h1-skeleton"></div>
-                  <div className="mock-skeleton p-skeleton"></div>
-                  
-                  <div className="mock-panels">
-                    <div className="mock-panel p-left">
-                      <div className="skeleton-line full"></div>
-                      <div className="skeleton-line half"></div>
-                      <div className="skeleton-box"></div>
-                      <div className="skeleton-btn"></div>
-                    </div>
-                    <div className="mock-panel p-right">
-                      <div className="skeleton-line full"></div>
-                      <div className="skeleton-line third"></div>
-                      <div className="skeleton-box large"></div>
-                      <div className="skeleton-btn full"></div>
-                    </div>
+              {/* VINTAGE WORKSPACE DESK CANVAS */}
+              <div className="newspaper-desk">
+                
+                {/* Background Overlapping Torn Scraps */}
+                <div className="newspaper-scrap scrap-top" aria-hidden="true">
+                  <div className="scrap-header">The Chronicle</div>
+                  <div className="scrap-body">
+                    <h5>TALENT DEMAND OUTSTRIPS SUPPLY</h5>
+                    <p>Technical leads report severe bottlenecks in backend scaling. Performance optimization experts are sought after.</p>
                   </div>
                 </div>
+                
+                <div className="newspaper-scrap scrap-bottom" aria-hidden="true">
+                  <div className="scrap-header">Daily Telegraph</div>
+                  <div className="scrap-body">
+                    <h5>REFACTORS DELIVER 40% SPEEDUP</h5>
+                    <p>State-sharding memory queues successfully implemented. Uptime is reportedly exceeding initial engineering estimates.</p>
+                  </div>
+                </div>
+
+                {/* CONTAINER TO PERMIT ROTATION, SCALE AND 3D DROP SHADOW OF COMBINED JAGGED BODY + OVERLAYS */}
+                <div className="newspaper-wrapper">
+                  {/* MAIN ROTATED NEWSPAPER CLIPPING */}
+                  <div className="newspaper-body">
+                    {/* Decorative Elements */}
+                    <div className="coffee-stain" aria-hidden="true"></div>
+                  <div className="newspaper-torn-edge" aria-hidden="true"></div>
+                  <div className="ink-stamp stamp-hired" aria-hidden="true">HIRED</div>
+
+                  {/* NEWSPAPER RESUME HEADER */}
+                  <div className="newspaper-header">
+                    <div className="newspaper-kicker">EXTRAORDINARY DISPATCH — SPECIAL EDITION</div>
+                    <h3 className="newspaper-title">The PrepDost Gazette</h3>
+                    <div className="newspaper-meta">
+                      <span>ESTD. 2026</span>
+                      <span>•</span>
+                      <span>SAN FRANCISCO, CALIFORNIA</span>
+                      <span>•</span>
+                      <span>PRICE FIVE CENTS</span>
+                    </div>
+                  </div>
+
+                  {/* NEWSPAPER COLUMNS */}
+                  <div className="newspaper-columns">
+                    {/* LEFT COLUMN - THE HEADLINE STORY (RESUME PROFILE) */}
+                    <div className="column col-left">
+                      <div className="news-article">
+                        <h4>Engineer Lands FAANG Offer in Record Time!</h4>
+                        <div className="article-byline">By Our Technology Correspondent</div>
+                        <p>
+                          <span className="drop-cap">T</span>hrough meticulous resume alignment and rigorous platform prep, a local developer has successfully bypassed generic study plans to secure a senior engineering role at a major platform.
+                        </p>
+                        <p>
+                          By cross-referencing past project experience with core recruiter requirements, the candidate resolved critical technical gaps. Platform metrics indicate an impressive <mark className="news-highlight">40% latency reduction</mark> achieved via optimized state-sharding queues.
+                        </p>
+                      </div>
+                      
+                      {/* Black & White Woodcut Sketch Overlay */}
+                      <div className="news-sketch-container">
+                        <svg className="woodcut-svg" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Ink drawing of an engineer working on a retro terminal">
+                          {/* Halftone grid lines mimicking engraving */}
+                          <line x1="0" y1="5" x2="100" y2="5" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="10" x2="100" y2="10" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="15" x2="100" y2="15" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="20" x2="100" y2="20" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="25" x2="100" y2="25" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="30" x2="100" y2="30" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="35" x2="100" y2="35" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="40" x2="100" y2="40" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="45" x2="100" y2="45" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="50" x2="100" y2="50" stroke="#111111" strokeWidth="0.5" />
+                          <line x1="0" y1="55" x2="100" y2="55" stroke="#111111" strokeWidth="0.5" />
+                          
+                          {/* Stylized Computer/Desk Silhouette using Engraving Shading */}
+                          <path d="M15,48 L85,48 L80,20 L20,20 Z" fill="#fbf9f4" stroke="#111111" strokeWidth="1.5" />
+                          <path d="M25,25 L75,25 L72,43 L28,43 Z" fill="none" stroke="#111111" strokeWidth="1" />
+                          
+                          {/* Code Lines on Screen */}
+                          <line x1="32" y1="30" x2="60" y2="30" stroke="#111111" strokeWidth="1.5" />
+                          <line x1="32" y1="34" x2="52" y2="34" stroke="#111111" strokeWidth="1.5" />
+                          <line x1="32" y1="38" x2="68" y2="38" stroke="#111111" strokeWidth="1.5" />
+                          
+                          {/* Keyboard Base */}
+                          <rect x="25" y="50" width="50" height="4" rx="1" fill="#111111" />
+                        </svg>
+                        <span className="sketch-caption">FIG 1. HIGH-PERFORMANCE WORKSTATION</span>
+                      </div>
+                    </div>
+
+                    {/* RIGHT COLUMN - EXPERIENCE BULLETS & CLASSIFIED ADS */}
+                    <div className="column col-right">
+                      <div className="news-article">
+                        <h4>Dispatches & Key Expertise</h4>
+                        <p>
+                          The candidate's core dossier highlights remarkable versatility across <mark className="news-highlight">React Native, system design</mark>, and large-scale state orchestration. Reports claim a 99.99% operational uptime maintained under peak traffic conditions.
+                        </p>
+                      </div>
+
+                      {/* Vintage Classified Ads Section */}
+                      <div className="classified-section">
+                        <div className="classified-title">Classified Notices</div>
+                        
+                        <div className="classified-item">
+                          <strong>WANTED:</strong> Tech Leads who appreciate clean architectures, robust telemetry, and optimized thread layouts. FAANG firms hiring immediately.
+                        </div>
+                        
+                        <div className="classified-item">
+                          <strong>SITUATIONS WANTED:</strong> Expert Developer with a history of resolving critical code debt & boosting team velocity by 40%. Full credentials available on request.
+                        </div>
+                        
+                        <div className="classified-item">
+                          <strong>BLUEPRINTS READY:</strong> Tailored 7-day interview blueprints designed to tackle high-stress mock loops. Success guaranteed.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rolled Page Corners (Placed outside body as siblings so their shadows/borders aren't clipped!) */}
+                <div className="rolled-corner-tr" aria-hidden="true"></div>
+                <div className="rolled-corner-bl" aria-hidden="true"></div>
               </div>
-              
-              <div className="blob blob-1"></div>
-              <div className="blob blob-2"></div>
             </div>
-          </section>
+
+            <div className="blob blob-1"></div>
+            <div className="blob blob-2"></div>
+          </div>
+        </section>
 
           {/* DYNAMIC SELECTION TAGLINE SECTION */}
           <section className="tagline-section">
