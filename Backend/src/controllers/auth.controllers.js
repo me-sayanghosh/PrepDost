@@ -56,6 +56,7 @@ function parseMailFrom(mailFrom) {
 async function sendEmail({ to, subject, html }) {
   const resendApiKey = String(process.env.RESEND_API_KEY || "").trim();
   const sendgridApiKey = String(process.env.SENDGRID_API_KEY || "").trim();
+  const brevoApiKey = String(process.env.BREVO_API_KEY || "").trim();
 
   const mailFrom = process.env.MAIL_FROM || process.env.SMTP_USER || "onboarding@resend.dev";
   const parsedFrom = parseMailFrom(mailFrom);
@@ -118,10 +119,40 @@ async function sendEmail({ to, subject, html }) {
     return { success: true };
   }
 
-  // 3. Fallback to standard SMTP (works locally, but may time out on cloud platforms like Render free tier)
+  // 3. Try Brevo HTTP API
+  if (brevoApiKey) {
+    console.log("Attempting to send email via Brevo HTTP API...");
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": brevoApiKey,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        sender: {
+          name: parsedFrom.name || "PrepDost",
+          email: parsedFrom.email || mailFrom,
+        },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Brevo API failed with status ${res.status}: ${errText}`);
+    }
+
+    console.log("Email sent successfully via Brevo HTTP API");
+    return { success: true };
+  }
+
+  // 4. Fallback to standard SMTP (works locally, but may time out on cloud platforms like Render free tier)
   const transporter = getMailTransporter();
   if (!transporter) {
-    throw new Error("Mail service is not configured. Please define RESEND_API_KEY, SENDGRID_API_KEY, or SMTP environment variables.");
+    throw new Error("Mail service is not configured. Please define RESEND_API_KEY, SENDGRID_API_KEY, BREVO_API_KEY, or SMTP environment variables.");
   }
 
   console.log("Attempting to send email via SMTP...");
