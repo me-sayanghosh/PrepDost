@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "../components/SuccessModal.jsx";
+import GoogleLoginButton from "../components/GoogleLoginButton.jsx";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -17,7 +18,7 @@ function Register() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const { loading, handleRegister, user } = useAuth();
+  const { loading, handleRegister, user, handleGoogleLogin } = useAuth();
   const navigate = useNavigate();
 
   // Show success modal after user registers
@@ -188,6 +189,19 @@ function Register() {
           )}
           <button className="button primary-button">Create Account</button>
         </form>
+        <div className="oauth-divider">or continue with</div>
+        <GoogleLoginButton 
+          onSuccess={async (credential) => {
+            setErrorMsg("");
+            const result = await handleGoogleLogin(credential);
+            if (result && !result.success) {
+              setErrorMsg(result.error);
+            }
+          }}
+          onError={(err) => {
+            setErrorMsg(err);
+          }}
+        />
         <p>
             Already have an account?<Link to="/login" className="link">Login here</Link>
         </p>

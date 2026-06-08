@@ -4,11 +4,12 @@ import "../auth.form.scss";
 import { useAuth } from "../hooks/useAuth.js";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SuccessModal from "../components/SuccessModal.jsx";
+import GoogleLoginButton from "../components/GoogleLoginButton.jsx";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Login() {
-  const { loading, handleLogin, user } = useAuth();
+  const { loading, handleLogin, user, handleGoogleLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -155,6 +156,20 @@ function Login() {
           <button className="button primary-button">Login</button>
         </form>
 
+        <div className="oauth-divider">or continue with</div>
+        <GoogleLoginButton 
+          onSuccess={async (credential) => {
+            setErrorMsg("");
+            const result = await handleGoogleLogin(credential);
+            if (result && !result.success) {
+              setErrorMsg(result.error);
+            }
+          }}
+          onError={(err) => {
+            setErrorMsg(err);
+          }}
+        />
+
         <p>
             <Link to="/forgot-password" className="link">Forgot password?</Link>
         </p>
@@ -162,7 +177,6 @@ function Login() {
         <p>
             Don't have an account?<Link to="/register" className="link">Register here</Link>
         </p>
-
 
         <div />
       </div>
