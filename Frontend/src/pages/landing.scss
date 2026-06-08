@@ -97,18 +97,10 @@ $text-muted: #8a7f6e;
   .logo-container {
     display: flex;
     align-items: center;
-    gap: 12px;
+    cursor: pointer;
 
-    .logo-icon {
-      color: $navy;
-    }
-
-    .logo-text {
-      font-size: 1.55rem;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 800;
-      color: $navy;
-      letter-spacing: -1px;
+    img {
+      display: block;
     }
   }
 
@@ -2089,16 +2081,8 @@ $text-muted: #8a7f6e;
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 10px;
-      
-      .logo-icon { color: #818cf8; }
-      
-      .logo-text {
-        font-size: 1.35rem;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        color: white;
-      }
+
+      img { display: block; }
     }
 
     .footer-desc {
