@@ -58,6 +58,12 @@ authrouter.post('/verify-reset-code', authcontroller.verifyResetCodeController);
 */
 authrouter.get('/get-me', authMiddleware, authcontroller.getMeController);
 
+/* 
+@route POST /api/auth/google-login
+@desc login or register user with Google OAuth ID token
+@access Public
+*/
+authrouter.post('/google-login', authcontroller.googleLoginController);
 
 
 module.exports = authrouter;

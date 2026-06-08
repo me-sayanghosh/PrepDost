@@ -379,6 +379,101 @@ async function verifyResetCodeController(req, res) {
   }
 }
 
+const client = new OAuth2Client();
+
+/* 
+@route POST /api/auth/google-login
+@desc login or register user via Google OAuth ID token
+@access Public
+*/
+async function googleLoginController(req, res) {
+  try {
+    const { token } = req.body || {};
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+
+    if (!token) {
+      return res.status(400).json({ message: "Google token is required" });
+    }
+
+    if (!googleClientId) {
+      console.error("GOOGLE_CLIENT_ID is not configured in backend .env");
+      return res.status(500).json({ message: "Google authentication is not configured on the server." });
+    }
+
+    let payload;
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: googleClientId,
+      });
+      payload = ticket.getPayload();
+    } catch (verifyError) {
+      console.error("Google token verification failed:", verifyError);
+      return res.status(400).json({ message: "Invalid Google token" });
+    }
+
+    const { sub: googleId, email, name } = payload;
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!normalizedEmail) {
+      return res.status(400).json({ message: "Google account does not provide a valid email address" });
+    }
+
+    // Find user by email or by googleId
+    let user = await usermodel.findOne({
+      $or: [{ googleId }, { email: normalizedEmail }],
+    });
+
+    if (!user) {
+      // Create a unique username
+      let baseUsername = name ? name.replace(/\s+/g, '').toLowerCase() : normalizedEmail.split('@')[0];
+      // Keep it under 30 chars and alphanumeric/underscores
+      baseUsername = baseUsername.replace(/[^a-zA-Z0-9_]/g, '');
+      let username = baseUsername;
+      let isUsernameExists = await usermodel.findOne({ username });
+      
+      while (isUsernameExists) {
+        username = `${baseUsername}_${Math.floor(1000 + Math.random() * 9000)}`;
+        isUsernameExists = await usermodel.findOne({ username });
+      }
+
+      user = new usermodel({
+        username,
+        email: normalizedEmail,
+        googleId,
+      });
+      await user.save();
+    } else {
+      // If user exists but has no googleId, link it
+      if (!user.googleId) {
+        user.googleId = googleId;
+        await user.save();
+      }
+    }
+
+    // Generate our JWT
+    const jwtToken = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("token", jwtToken);
+    res.status(200).json({
+      message: "User logged in successfully with Google",
+      token: jwtToken,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Google OAuth login error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
      registerUserController,
      loginUserController, 
@@ -386,5 +481,6 @@ module.exports = {
      getMeController,
      forgotPasswordController,
      resetPasswordController,
-     verifyResetCodeController
+     verifyResetCodeController,
+     googleLoginController
 };

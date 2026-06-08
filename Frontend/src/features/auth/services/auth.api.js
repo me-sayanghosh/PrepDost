@@ -71,6 +71,15 @@ export async function login ({email, password}) {
 }
 
 
+export async function googleLogin (token) {
+    try {
+        const response = await api.post('/api/auth/google-login', { token });
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in user with Google:', error);
+        throw error;
+    }
+}
 
 
 export async function logout () {
