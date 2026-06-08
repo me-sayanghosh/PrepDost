@@ -63,6 +63,8 @@ async function sendEmail({ to, subject, html }) {
   // 1. Try Resend HTTP API
   if (resendApiKey) {
     console.log("Attempting to send email via Resend HTTP API...");
+    // If using a free/sandbox account without a verified domain, Resend requires sending from onboarding@resend.dev
+    const resendFrom = process.env.RESEND_FROM || "onboarding@resend.dev";
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -70,7 +72,7 @@ async function sendEmail({ to, subject, html }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: mailFrom,
+        from: resendFrom,
         to: [to],
         subject,
         html,
