@@ -401,3 +401,43 @@ main.auth-page-main.loading-page {
     }
   }
 }
+
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin: 24px 0;
+  text-transform: uppercase;
+  animation: slideUp 0.5s ease 0.44s both;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--cream-border);
+  }
+
+  &:not(:empty)::before {
+    margin-right: .75em;
+  }
+
+  &:not(:empty)::after {
+    margin-left: .75em;
+  }
+}
+
+.google-login-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  animation: slideUp 0.5s ease 0.46s both;
+  margin-bottom: 8px;
+  
+  iframe {
+    margin: 0 auto;
+  }
+}

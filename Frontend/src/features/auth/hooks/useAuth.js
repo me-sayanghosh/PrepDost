@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext.js";
-import { login, register, logout, setAuthToken } from "../services/auth.api.js";
+import { login, googleLogin, register, logout, setAuthToken } from "../services/auth.api.js";
 
 
 
@@ -74,16 +74,37 @@ export const useAuth = () => {
         }
     }
 
+    const handleGoogleLogin = async (token) => {
+        setLoading(true)
+        try {
+            const data = await googleLogin(token)
+            if (data.token) {
+                setAuthToken(data.token)
+            }
+            setUser(data.user)
+            return { success: true };
+        } catch (error) {
+            console.error("Google login failed:", error)
+            return {
+                success: false,
+                error: error.response?.data?.message || "Google login failed",
+            };
+        } finally {
+            setLoading(false)
+        }
+    }
+
     return {
         user,
         loading,
         handleLogin,
         handleRegister,
         handleLogout,
+        handleGoogleLogin,
         login: handleLogin,
         register: handleRegister,
         logout: handleLogout,
-
+        googleLogin: handleGoogleLogin,
     }
 
 }
