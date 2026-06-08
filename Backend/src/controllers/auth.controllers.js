@@ -36,35 +36,123 @@ function getMailTransporter() {
   });
 }
 
-async function sendResetPasswordCodeEmail(user, code) {
-  const transporter = getMailTransporter();
+function parseMailFrom(mailFrom) {
+  if (!mailFrom) return { email: "", name: "" };
+  
+  // Format: Name <email@example.com>
+  const match = mailFrom.match(/^(.*?)\s*<(.*?)>$/);
+  if (match) {
+    return {
+      name: match[1].trim(),
+      email: match[2].trim()
+    };
+  }
+  return {
+    name: "",
+    email: mailFrom.trim()
+  };
+}
 
-  if (!transporter) {
-    throw new Error("Mail service is not configured");
+async function sendEmail({ to, subject, html }) {
+  const resendApiKey = String(process.env.RESEND_API_KEY || "").trim();
+  const sendgridApiKey = String(process.env.SENDGRID_API_KEY || "").trim();
+
+  const mailFrom = process.env.MAIL_FROM || process.env.SMTP_USER || "onboarding@resend.dev";
+  const parsedFrom = parseMailFrom(mailFrom);
+
+  // 1. Try Resend HTTP API
+  if (resendApiKey) {
+    console.log("Attempting to send email via Resend HTTP API...");
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: mailFrom,
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Resend API failed with status ${res.status}: ${errText}`);
+    }
+
+    const data = await res.json();
+    console.log("Email sent successfully via Resend HTTP API", { id: data.id });
+    return data;
   }
 
+  // 2. Try SendGrid HTTP API
+  if (sendgridApiKey) {
+    console.log("Attempting to send email via SendGrid HTTP API...");
+    const res = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${sendgridApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: to }] }],
+        from: {
+          email: parsedFrom.email || mailFrom,
+          name: parsedFrom.name || "PrepDost",
+        },
+        subject,
+        content: [{ type: "text/html", value: html }],
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`SendGrid API failed with status ${res.status}: ${errText}`);
+    }
+
+    console.log("Email sent successfully via SendGrid HTTP API");
+    return { success: true };
+  }
+
+  // 3. Fallback to standard SMTP (works locally, but may time out on cloud platforms like Render free tier)
+  const transporter = getMailTransporter();
+  if (!transporter) {
+    throw new Error("Mail service is not configured. Please define RESEND_API_KEY, SENDGRID_API_KEY, or SMTP environment variables.");
+  }
+
+  console.log("Attempting to send email via SMTP...");
   const info = await transporter.sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
-    to: user.email,
-    subject: "Your PrepDost password reset code",
-    html: `
-      <p>Hello ${user.username},</p>
-      <p>We received a request to reset your password.</p>
-      <p>Your verification code is:</p>
-      <h2 style="letter-spacing: 4px;">${code}</h2>
-      <p>This code expires in 10 minutes.</p>
-      <p>If you did not request this, you can ignore this email.</p>
-    `,
+    from: mailFrom,
+    to,
+    subject,
+    html,
   });
 
-  console.log("Password reset mail queued", {
-    to: user.email,
+  console.log("Email sent successfully via SMTP", {
     messageId: info.messageId,
     accepted: info.accepted,
-    rejected: info.rejected,
     response: info.response,
   });
+  return info;
+}
 
+async function sendResetPasswordCodeEmail(user, code) {
+  const htmlContent = `
+    <p>Hello ${user.username},</p>
+    <p>We received a request to reset your password.</p>
+    <p>Your verification code is:</p>
+    <h2 style="letter-spacing: 4px;">${code}</h2>
+    <p>This code expires in 10 minutes.</p>
+    <p>If you did not request this, you can ignore this email.</p>
+  `;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Your PrepDost password reset code",
+    html: htmlContent,
+  });
 }
 
 /* 
