@@ -9,7 +9,6 @@ function Landing() {
   const { user } = useAuth();
   const location = useLocation();
   const [showLogoutSuccess, setShowLogoutSuccess] = React.useState(false);
-  const [showCopyToast, setShowCopyToast] = React.useState(false);
   const [titleAnimated, setTitleAnimated] = React.useState(false);
   
   // State for Interactive Sandbox
@@ -44,16 +43,6 @@ function Landing() {
   };
   const handleRegisterClick = () => {
     navigate("/register", { state: location.state });
-  };
-
-  // Tagline Copy Trigger
-  const handleCopyTagline = () => {
-    navigator.clipboard.writeText("YOU DON'T NEED MORE CONTENT. YOU NEED A PLAN THAT ACTUALLY WORKS.");
-    setShowCopyToast(true);
-    
-    const timer = setTimeout(() => {
-      setShowCopyToast(false);
-    }, 2000);
   };
 
   // Sandbox data definitions
@@ -123,16 +112,6 @@ function Landing() {
         </div>
       )}
       
-      {showCopyToast && (
-        <div className="copy-toast" role="status" aria-live="polite">
-          <span className="toast-icon" aria-hidden="true">✓</span>
-          <div className="toast-content">
-            <span className="toast-title">Copied to Clipboard</span>
-            <span className="toast-message">Your PrepDost tagline is ready to paste.</span>
-          </div>
-        </div>
-      )}
-
       <div className="landing-page">
         <header className="landing-header">
           <div className="logo-container">
@@ -339,16 +318,6 @@ function Landing() {
           {/* DYNAMIC SELECTION TAGLINE SECTION */}
           <section className="tagline-section">
             <div className="selection-container">
-              {/* Tooltip Overlay Menu */}
-              <div className="ios-tooltip" onClick={handleCopyTagline} title="Click to copy tagline">
-                <span className="tooltip-action">Copy</span>
-                <span className="tooltip-divider"></span>
-                <span className="tooltip-action">Select All</span>
-                <span className="tooltip-divider"></span>
-                <span className="tooltip-action">Share</span>
-                <span className="tooltip-arrow"></span>
-              </div>
-              
               <h2 className="tagline-text">
                 <span className="line first-line">YOU </span>
                 <span className="line highlight-line">
