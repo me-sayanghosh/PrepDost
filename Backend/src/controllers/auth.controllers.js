@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("node:crypto");
 const nodemailer = require("nodemailer");
 const blacklistmodel = require("../models/blacklist.model");
+const { OAuth2Client } = require("google-auth-library");
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
