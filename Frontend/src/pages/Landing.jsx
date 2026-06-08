@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../features/auth/hooks/useAuth";
+import PrepDostLogo from "../components/PrepDostLogo";
 import "./landing.scss";
 
 function Landing() {
@@ -135,12 +136,7 @@ function Landing() {
       <div className="landing-page">
         <header className="landing-header">
           <div className="logo-container">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="logo-icon">
-              <path d="M10 21V15c-3 0-6-2-6-5a7 7 0 0 1 14 0v2h-1.5v3H14v6Z" />
-              <path d="M11 16V6" />
-              <path d="M8 9l3-3 3 3" />
-            </svg>
-            <span className="logo-text">PrepDost</span>
+            <PrepDostLogo variant="dark" height={34} />
           </div>
           <nav className="landing-nav">
             {user ? (
@@ -578,12 +574,7 @@ function Landing() {
             <div className="footer-content">
               <div className="footer-info">
                 <div className="logo-container">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="logo-icon">
-                    <path d="M10 21V15c-3 0-6-2-6-5a7 7 0 0 1 14 0v2h-1.5v3H14v6Z" />
-                    <path d="M11 16V6" />
-                    <path d="M8 9l3-3 3 3" />
-                  </svg>
-                  <span className="logo-text">PrepDost</span>
+                  <PrepDostLogo variant="light" height={30} />
                 </div>
                 <p className="footer-desc">
                   Hyper-tailored interview blueprints generated in seconds to help job seekers land roles at global technology platforms.
