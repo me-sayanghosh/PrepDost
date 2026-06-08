@@ -9,28 +9,18 @@ html, body, #root {
     height: 100%;
 }
 
-/* ── Global paper texture ───────────────────────────────────
-   Adds a very subtle grain/tooth to every page background,
-   matching the texture visible in the PrepDost logo image.
-   Uses a layered SVG-noise data-URI – no external image needed.
-   Colour is NOT changed; only a thin noise film is placed on top.
+/* ── Global paper texture (lightweight) ──────────────────────
+   Static background-image on html — zero repaint cost on scroll.
+   No position:fixed, no mix-blend-mode, no compositing layer.
    ─────────────────────────────────────────────────────────── */
-body {
-    /* Paper-grain noise overlay — multiply blends with any bg colour */
-    position: relative;
+html {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    background-repeat: repeat;
 }
 
-body::before {
-    content: '';
-    position: fixed;          /* stays put while page scrolls */
-    inset: 0;
-    z-index: 9999;            /* above everything */
-    pointer-events: none;     /* invisible to clicks */
-    opacity: 0.028;           /* very subtle — dial up to ~0.05 for stronger grain */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 180px 180px;
-    mix-blend-mode: multiply;
+body {
+    position: relative;
 }
 
 #root {

@@ -83,6 +83,8 @@ $text-muted: #8a7f6e;
   box-sizing: border-box;
   color: $navy;
   overflow-x: hidden;
+  /* Isolate the page's paint area so sections don't trigger full-page repaints */
+  isolation: isolate;
 }
 
 .landing-header {
@@ -93,6 +95,9 @@ $text-muted: #8a7f6e;
   background: transparent;
   width: 100%;
   box-sizing: border-box;
+  /* Own compositing layer so sticky scroll doesn't repaint surrounding content */
+  will-change: transform;
+  transform: translateZ(0);
 
   .logo-container {
     display: flex;
@@ -114,7 +119,8 @@ $text-muted: #8a7f6e;
       border-radius: 8px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s ease;
+      /* Only transition the properties that actually change — avoids full layout recalc */
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       font-family: inherit;
 
       &.btn-secondary {
@@ -362,7 +368,7 @@ $text-muted: #8a7f6e;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       font-family: inherit;
 
       &:hover {
@@ -891,6 +897,9 @@ $text-muted: #8a7f6e;
    ========================================================== */
 .tagline-section {
   padding: 120px 24px;
+  /* Skip rendering until near viewport — massive paint savings */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
   background: rgba($navy, 0.02);
   display: flex;
   justify-content: center;
@@ -1154,6 +1163,8 @@ $text-muted: #8a7f6e;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
 
   // subtle background glow
   &::before {
@@ -1201,7 +1212,8 @@ $text-muted: #8a7f6e;
   border-radius: 20px;
   padding: 40px 32px 36px 32px;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  will-change: transform;
   box-shadow: 0 2px 12px rgba($navy, 0.04), 0 1px 3px rgba($navy, 0.03);
   z-index: 1;
   margin: 0 14px;
@@ -1245,7 +1257,7 @@ $text-muted: #8a7f6e;
     font-weight: 900;
     color: rgba($navy, 0.05);
     line-height: 1;
-    transition: all 0.4s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
     letter-spacing: -2px;
     user-select: none;
   }
@@ -1266,7 +1278,7 @@ $text-muted: #8a7f6e;
     align-items: center;
     justify-content: center;
     margin-bottom: 28px;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid rgba($navy, 0.08);
     position: relative;
     z-index: 2;
@@ -1418,7 +1430,7 @@ $text-muted: #8a7f6e;
     font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, border-color 0.25s ease;
     border: 1px solid rgba(255,255,255,0.14);
     background: rgba(255,255,255,0.06);
     color: rgba(255,255,255,0.6);
@@ -1594,7 +1606,7 @@ $text-muted: #8a7f6e;
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     letter-spacing: -0.01em;
 
     &:hover {
@@ -1715,7 +1727,8 @@ $text-muted: #8a7f6e;
   border: 1px solid rgba($navy, 0.07);
   border-radius: 22px;
   padding: 40px 36px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  will-change: transform;
   box-shadow: 0 4px 20px rgba($navy, 0.04);
   display: flex;
   flex-direction: column;
@@ -1943,6 +1956,8 @@ $text-muted: #8a7f6e;
   border-top: 1px solid rgba($navy, 0.04);
   width: 100%;
   box-sizing: border-box;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 700px;
 }
 
 .accordion-container {
@@ -1959,7 +1974,7 @@ $text-muted: #8a7f6e;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba($navy, 0.01);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
   &.open {
     border-color: rgba($navy, 0.12);
@@ -2111,7 +2126,7 @@ $text-muted: #8a7f6e;
         text-decoration: none;
         font-size: 0.78rem;
         font-weight: 700;
-        transition: all 0.2s ease;
+        transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 
         &:hover {
           background: rgba(99,102,241,0.25);
@@ -2150,7 +2165,7 @@ $text-muted: #8a7f6e;
       text-decoration: none;
       font-size: 0.9rem;
       font-weight: 500;
-      transition: all 0.2s ease;
+      transition: color 0.2s ease, padding-left 0.2s ease;
       display: flex;
       align-items: center;
       gap: 6px;

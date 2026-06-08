@@ -10,9 +10,9 @@ import { useSmoothScroll } from '../hooks/useSmoothScroll';
  */
 export function SmoothScrollProvider({ children }) {
   const lenisRef = useSmoothScroll({
-    duration: 1.4,       // inertia feel — higher = slower/smoother
-    lerp: 0.08,          // interpolation — 0.06–0.12 is the sweet spot
-    wheelMultiplier: 0.9, // slightly slower wheel for premium feel
+    duration: 1.2,       // slightly shorter = snappier, less work per scroll
+    lerp: 0.1,           // 0.1 is the sweet spot: smooth but not laggy
+    wheelMultiplier: 1.0, // native-speed wheel, Lenis smooths the easing
     touchMultiplier: 1.8,
   });
 
